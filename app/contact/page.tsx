@@ -51,7 +51,7 @@ export default function ContactPage() {
         body: JSON.stringify(formData),
       });
 
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
 
       if (res.ok && data.success) {
         setStatus("success");
@@ -64,13 +64,52 @@ export default function ContactPage() {
           message: "",
           _honeypot: "",
         });
-      } else {
-        setStatus("error");
-        setErrorMessage("Something went wrong. Please try again or email me directly.");
+        return;
       }
+
+      // Check for public Web3Forms fallback key if defined in environment
+      const publicWeb3Key = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
+      if (publicWeb3Key) {
+        try {
+          const w3Res = await fetch("https://api.web3forms.com/submit", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Accept: "application/json" },
+            body: JSON.stringify({
+              access_key: publicWeb3Key,
+              name: formData.name,
+              email: formData.email,
+              company: formData.company,
+              project_type: formData.projectType,
+              message: formData.message,
+              subject: `New Portfolio Inquiry — ${formData.name}`,
+            }),
+          });
+          const w3Data = await w3Res.json();
+          if (w3Data.success) {
+            setStatus("success");
+            setSuccessMessage("Thanks! Your message has been sent. I'll get back to you soon.");
+            setFormData({
+              name: "",
+              email: "",
+              company: "",
+              projectType: "Web Development",
+              message: "",
+              _honeypot: "",
+            });
+            return;
+          }
+        } catch {
+          // ignore fallback error and report main response message below
+        }
+      }
+
+      setStatus("error");
+      setErrorMessage(
+        data.message || "Failed to send message via API. Please email smit.sk.connect@gmail.com directly."
+      );
     } catch {
       setStatus("error");
-      setErrorMessage("Something went wrong. Please try again or email me directly.");
+      setErrorMessage("Network error. Please email smit.sk.connect@gmail.com directly or use the link below.");
     }
   };
 
@@ -290,9 +329,20 @@ export default function ContactPage() {
                   )}
 
                   {status === "error" && (
-                    <div className="p-4 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs sm:text-sm font-bold flex items-center gap-3 animate-fade-in" role="alert">
-                      <span className="w-5 h-5 rounded-full bg-rose-500/20 flex items-center justify-center text-rose-400 shrink-0 border border-rose-500/40">!</span>
-                      <span>{errorMessage}</span>
+                    <div className="p-4 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs sm:text-sm font-bold space-y-2 animate-fade-in" role="alert">
+                      <div className="flex items-center gap-3">
+                        <span className="w-5 h-5 rounded-full bg-rose-500/20 flex items-center justify-center text-rose-400 shrink-0 border border-rose-500/40">!</span>
+                        <span>{errorMessage}</span>
+                      </div>
+                      <div className="pt-2 border-t border-rose-500/20 flex flex-wrap items-center justify-between gap-2">
+                        <span className="text-[11px] font-normal text-rose-200/80">Need to send right away?</span>
+                        <a
+                          href={`mailto:smit.sk.connect@gmail.com?subject=${encodeURIComponent(`Portfolio Inquiry from ${formData.name || 'Visitor'}`)}&body=${encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\nCompany: ${formData.company}\nProject Type: ${formData.projectType}\n\nMessage:\n${formData.message}`)}`}
+                          className="inline-flex items-center gap-1.5 text-xs text-white bg-[#F14E08] hover:bg-white hover:text-black px-3 py-1.5 rounded-lg transition-colors font-extrabold"
+                        >
+                          <span>✉ Open Email Client Direct</span>
+                        </a>
+                      </div>
                     </div>
                   )}
 

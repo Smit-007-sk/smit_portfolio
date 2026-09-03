@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans, Fraunces } from "next/font/google";
 import "./globals.css";
 import SmoothScrollProvider from "@/components/SmoothScrollProvider";
@@ -23,6 +23,17 @@ export const metadata: Metadata = {
   description: "Full-Stack Web Developer & UI/UX Architect crafting high-performance digital products, web applications, and interactive web experiences.",
 };
 
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#0B0C10" },
+    { media: "(prefers-color-scheme: dark)", color: "#0B0C10" },
+  ],
+  colorScheme: "dark",
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -31,9 +42,14 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${sans.variable} ${displaySerif.variable} antialiased bg-[#F14E08] text-white selection:bg-white selection:text-[#F14E08]`}
+      className={`${sans.variable} ${displaySerif.variable} antialiased bg-[#0B0C10] text-white selection:bg-white selection:text-[#F14E08]`}
     >
-      <body className="min-h-screen bg-[#F14E08] text-white flex flex-col font-sans overflow-x-hidden">
+      <head>
+        <meta name="theme-color" content="#0B0C10" />
+        <meta name="msapplication-navbutton-color" content="#0B0C10" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+      </head>
+      <body className="min-h-screen bg-[#0B0C10] text-white flex flex-col font-sans overflow-x-hidden">
         <SourceProtectionProvider>
           <Preloader />
           <SmoothScrollProvider>

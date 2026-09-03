@@ -11,12 +11,12 @@ import ScrollExpand from "@/components/ScrollExpand";
 
 export default function Home() {
   return (
-    <main className="min-h-screen w-full bg-[#F14E08] text-white flex flex-col justify-between overflow-x-clip">
-      {/* Header Navigation */}
-      <Navbar />
-
-      {/* Main Hero Section */}
-      <HeroSection />
+    <main className="min-h-screen w-full bg-[#0B0C10] text-white flex flex-col justify-between overflow-x-clip">
+      {/* Header Navigation & Hero in dedicated Orange Background */}
+      <div className="w-full bg-[#F14E08] text-white flex flex-col">
+        <Navbar />
+        <HeroSection />
+      </div>
 
       {/* Selected Work Section */}
       <SelectedWorkSection />

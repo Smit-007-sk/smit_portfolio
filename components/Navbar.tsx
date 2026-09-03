@@ -155,12 +155,10 @@ export default function Navbar() {
       {/* STICKY / FIXED MENU BUTTON */}
       <button
         onClick={() => setIsMenuOpen(!isMenuOpen)}
-        className={`fixed top-5 right-5 sm:right-8 md:right-12 z-50 inline-flex items-center justify-center gap-2 text-xs md:text-sm font-black uppercase tracking-wider px-5 py-2.5 rounded-full backdrop-blur-xl transition-all shadow-xl border ${
+        className={`fixed top-5 right-5 sm:right-8 md:right-12 z-50 inline-flex items-center justify-center gap-2 text-xs md:text-sm font-black uppercase tracking-wider px-5 py-2.5 rounded-full transition-all shadow-2xl border ${
           isMenuOpen
-            ? "bg-[#F14E08] text-white border-white/20 shadow-orange-500/20"
-            : isHomePage
-            ? "bg-black/40 text-white border-white/20 hover:bg-white hover:text-black shadow-black/20"
-            : "bg-white/90 text-[#111111] border-black/10 hover:bg-[#111111] hover:text-white shadow-black/10"
+            ? "bg-[#111318] text-white border-white/20 hover:bg-white hover:text-black shadow-black/50"
+            : "bg-[#0B0C10] text-white border-white/20 hover:bg-white hover:text-black shadow-black/40"
         }`}
       >
         <span>{isMenuOpen ? "CLOSE ✕" : "MENU ☰"}</span>

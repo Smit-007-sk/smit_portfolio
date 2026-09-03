@@ -3,6 +3,7 @@ import { Plus_Jakarta_Sans, Fraunces } from "next/font/google";
 import "./globals.css";
 import SmoothScrollProvider from "@/components/SmoothScrollProvider";
 import Preloader from "@/components/Preloader";
+import SourceProtectionProvider from "@/components/SourceProtectionProvider";
 
 const sans = Plus_Jakarta_Sans({
   variable: "--font-sans",
@@ -33,10 +34,12 @@ export default function RootLayout({
       className={`${sans.variable} ${displaySerif.variable} antialiased bg-[#F14E08] text-white selection:bg-white selection:text-[#F14E08]`}
     >
       <body className="min-h-screen bg-[#F14E08] text-white flex flex-col font-sans overflow-x-hidden">
-        <Preloader />
-        <SmoothScrollProvider>
-          {children}
-        </SmoothScrollProvider>
+        <SourceProtectionProvider>
+          <Preloader />
+          <SmoothScrollProvider>
+            {children}
+          </SmoothScrollProvider>
+        </SourceProtectionProvider>
       </body>
     </html>
   );

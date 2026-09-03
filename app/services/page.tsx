@@ -4,32 +4,48 @@ import React from "react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import CircularGallery, { CircularGalleryItem } from "@/components/CircularGallery";
 
 export default function ServicesPage() {
+  const galleryItems: CircularGalleryItem[] = [
+    { image: "/capabilities/web-experiences-v2.jpg", text: "WEB EXPERIENCES" },
+    { image: "/projects/nexora-crm-real.jpg", text: "WEB APPLICATIONS" },
+    { image: "/projects/ecommerce-platform-real.jpg", text: "E-COMMERCE STORES" },
+    { image: "/capabilities/custom-experiences-v2.jpg", text: "CUSTOM 3D & MOTION" },
+    { image: "/projects/emperor-media.jpg", text: "MARKETING & CMS" },
+    { image: "/projects/millionaire-digital-real.jpg", text: "CREATIVE PRODUCTION" },
+    { image: "/projects/dental-uk-real.jpg", text: "HEALTHCARE PLATFORMS" },
+    { image: "/projects/spotify-clone-real.jpg", text: "STREAMING WEB APPS" },
+  ];
+
   const servicesList = [
     {
       id: "01",
       title: "WEB DEVELOPMENT",
       shortDesc: "Modern, responsive websites built around your brand, goals, and audience — from landing pages to complete business websites.",
       tags: ["RESPONSIVE WEBSITES", "LANDING PAGES", "MODERN UI", "PERFORMANCE"],
+      badge: "FRONTEND & FULL-STACK",
     },
     {
       id: "02",
       title: "WEB APPLICATIONS",
       shortDesc: "Custom web applications designed around real workflows, from interactive dashboards to productivity and business tools.",
       tags: ["REACT / NEXT.JS", "CUSTOM DASHBOARDS", "INTERACTIVE UI", "API INTEGRATIONS"],
+      badge: "SAAS & WORKFLOWS",
     },
     {
       id: "03",
       title: "E-COMMERCE",
       shortDesc: "Clean, conversion-focused e-commerce experiences that make products easy to discover, explore, and purchase across devices.",
       tags: ["PRODUCT EXPERIENCES", "RESPONSIVE STORES", "SHOPPING FLOWS", "MODERN UI"],
+      badge: "CONVERSION & RETAIL",
     },
     {
       id: "04",
       title: "CUSTOM DIGITAL EXPERIENCES",
       shortDesc: "Unique digital experiences combining thoughtful design, interaction, animation, and custom functionality.",
       tags: ["MICRO-INTERACTIONS", "WEB ANIMATIONS", "INTERACTIVE EXPERIENCES", "CREATIVE DEVELOPMENT"],
+      badge: "BESPOKE & 3D MOTION",
     },
   ];
 
@@ -65,25 +81,55 @@ export default function ServicesPage() {
     <div className="min-h-screen w-full bg-[#F4F1EA] text-[#111111] flex flex-col justify-between overflow-x-clip select-none">
       <Navbar />
 
-      <main className="w-full py-16 px-6 md:px-12 lg:px-16">
-        <div className="max-w-[1500px] mx-auto space-y-24">
-          
-          {/* HERO */}
+      <main className="w-full py-16">
+        {/* Top Header Section */}
+        <div className="max-w-[1500px] mx-auto px-6 md:px-12 lg:px-16 mb-20">
           <section className="space-y-8 pt-6 border-b border-black/10 pb-16">
             <div className="flex items-center gap-3 text-xs md:text-sm font-extrabold uppercase tracking-widest text-[#F14E08]">
-              <span>SERVICES</span>
+              <span>SERVICES &amp; CAPABILITIES</span>
             </div>
 
-            <h1 className="font-brooks-display text-3xl sm:text-5xl md:text-7xl lg:text-[100px] leading-[0.88] tracking-tighter uppercase font-black">
-              <span className="text-[#111111]">I BUILD DIGITAL</span><br />
-              <span className="text-[#F14E08]">EXPERIENCES.</span>
-            </h1>
+            <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
+              <h1 className="font-brooks-display text-3xl sm:text-5xl md:text-7xl lg:text-[100px] leading-[0.88] tracking-tighter uppercase font-black">
+                <span className="text-[#111111]">I BUILD DIGITAL</span><br />
+                <span className="text-[#F14E08]">EXPERIENCES.</span>
+              </h1>
 
-            <p className="text-neutral-700 text-base sm:text-lg md:text-xl leading-relaxed max-w-2xl font-medium">
-              From high-converting websites to custom web applications and e-commerce experiences — I design and build fast, responsive digital products with a strong focus on usability and detail.
-            </p>
+              <p className="text-neutral-700 text-base sm:text-lg md:text-xl leading-relaxed max-w-xl font-medium">
+                From high-converting websites to custom web applications and e-commerce experiences — I design and build fast, responsive digital products with a strong focus on usability and detail.
+              </p>
+            </div>
           </section>
+        </div>
 
+        {/* FULL-WIDTH 3D CIRCULAR GALLERY SECTION */}
+        <section className="relative w-full bg-[#08090C] py-8 sm:py-12 md:py-16 text-white border-y border-white/10 mb-16 sm:mb-24 overflow-hidden">
+          {/* Header Bar */}
+          <div className="max-w-[1500px] mx-auto px-6 md:px-12 lg:px-16 mb-6 sm:mb-8 border-b border-white/10 pb-4 sm:pb-6">
+            <h2 className="font-brooks-display text-2xl sm:text-4xl lg:text-5xl font-black uppercase text-white">
+              ROTATING SERVICE GALLERY
+            </h2>
+          </div>
+
+          {/* Full Viewport Width WebGL Canvas */}
+          <div className="w-full h-[420px] sm:h-[520px] md:h-[640px] lg:h-[720px] relative overflow-hidden">
+            <CircularGallery
+              items={galleryItems}
+              bend={3}
+              textColor="#FFFFFF"
+              borderRadius={0.06}
+              scrollSpeed={2}
+              scrollEase={0.04}
+              autoScroll={true}
+              autoScrollSpeed={0.08}
+              font="bold 24px Plus Jakarta Sans, sans-serif"
+            />
+          </div>
+        </section>
+
+        {/* What I Offer & Process Sections */}
+        <div className="max-w-[1500px] mx-auto px-6 md:px-12 lg:px-16 space-y-24">
+          
           {/* WHAT I OFFER */}
           <section className="space-y-12 border-b border-black/10 pb-20">
             <div className="flex items-center gap-3 text-xs md:text-sm font-extrabold uppercase tracking-widest text-[#F14E08]">
@@ -94,7 +140,7 @@ export default function ServicesPage() {
               {servicesList.map((service) => (
                 <div
                   key={service.id}
-                  className="bg-white/70 backdrop-blur-md rounded-3xl p-8 lg:p-10 border border-black/5 hover:border-[#F14E08]/40 transition-all group"
+                  className="bg-white/80 backdrop-blur-md rounded-3xl p-8 lg:p-10 border border-black/5 hover:border-[#F14E08]/50 shadow-sm hover:shadow-xl transition-all duration-300 group"
                 >
                   <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                     
@@ -119,7 +165,7 @@ export default function ServicesPage() {
                       {service.tags.map((tag, tIdx) => (
                         <div
                           key={tIdx}
-                          className="bg-[#111111] text-white text-[11px] font-extrabold uppercase tracking-wider px-4 py-2 rounded-full shadow-sm"
+                          className="bg-[#111111] text-white text-[11px] font-extrabold uppercase tracking-wider px-4 py-2 rounded-full shadow-sm group-hover:bg-[#F14E08] transition-colors"
                         >
                           {tag}
                         </div>
@@ -146,7 +192,7 @@ export default function ServicesPage() {
               {processSteps.map((step) => (
                 <div
                   key={step.id}
-                  className="bg-white/60 p-6 rounded-2xl border border-black/5 flex flex-col justify-between min-h-[200px]"
+                  className="bg-white/70 p-6 rounded-2xl border border-black/5 flex flex-col justify-between min-h-[200px] shadow-sm hover:shadow-md transition-shadow"
                 >
                   <div className="space-y-3">
                     <div className="flex items-center justify-between border-b border-black/10 pb-3">

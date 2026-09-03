@@ -28,17 +28,7 @@ export default function CapabilitiesSection() {
           <line x1="9" y1="21" x2="9" y2="9" />
         </svg>
       ),
-      previewMockup: (
-        <div className="w-72 h-44 rounded-2xl bg-[#0B0C10] shadow-2xl border-2 border-white/40 overflow-hidden relative">
-          <Image
-            src="/capabilities/web-experiences.jpg"
-            alt="Web Experiences"
-            fill
-            sizes="288px"
-            className="w-full h-full object-cover object-center"
-          />
-        </div>
-      ),
+      imageSrc: "/capabilities/web-experiences-v2.jpg",
     },
     {
       id: "02",
@@ -50,17 +40,7 @@ export default function CapabilitiesSection() {
           <rect x="9" y="9" width="12" height="12" rx="2" />
         </svg>
       ),
-      previewMockup: (
-        <div className="w-72 h-44 rounded-2xl bg-[#0F1420] shadow-2xl border-2 border-white/40 overflow-hidden relative">
-          <Image
-            src="/capabilities/web-applications.jpg"
-            alt="Web Applications"
-            fill
-            sizes="288px"
-            className="w-full h-full object-cover object-center"
-          />
-        </div>
-      ),
+      imageSrc: "/capabilities/web-applications.jpg",
     },
     {
       id: "03",
@@ -72,17 +52,7 @@ export default function CapabilitiesSection() {
           <polyline points="8 6 2 12 8 18" />
         </svg>
       ),
-      previewMockup: (
-        <div className="w-72 h-44 rounded-2xl bg-[#0D1117] shadow-2xl border-2 border-white/40 overflow-hidden relative">
-          <Image
-            src="/capabilities/fullstack-systems.jpg"
-            alt="Full-Stack Systems"
-            fill
-            sizes="288px"
-            className="w-full h-full object-cover object-center"
-          />
-        </div>
-      ),
+      imageSrc: "/capabilities/fullstack-systems.jpg",
     },
     {
       id: "04",
@@ -93,17 +63,7 @@ export default function CapabilitiesSection() {
           <path d="M12 2l2.4 7.2L22 11.6l-6 4.8 2.4 7.6L12 18.8 5.6 24l2.4-7.6-6-4.8 7.6-2.4z" />
         </svg>
       ),
-      previewMockup: (
-        <div className="w-72 h-44 rounded-2xl bg-[#140F20] shadow-2xl border-2 border-white/40 overflow-hidden relative">
-          <Image
-            src="/capabilities/custom-experiences.jpg"
-            alt="Custom Experiences"
-            fill
-            sizes="288px"
-            className="w-full h-full object-cover object-center"
-          />
-        </div>
-      ),
+      imageSrc: "/capabilities/custom-experiences-v2.jpg",
     },
   ];
 
@@ -250,7 +210,7 @@ export default function CapabilitiesSection() {
                 <div
                   className={`absolute pointer-events-none z-50 transition-all duration-300 ease-out transform -translate-x-1/2 -translate-y-1/2 ${
                     hoveredId === item.id
-                      ? "opacity-100 scale-100 rotate-2"
+                      ? "opacity-100 scale-100 rotate-1 shadow-2xl"
                       : "opacity-0 scale-75 pointer-events-none"
                   }`}
                   style={{
@@ -258,7 +218,33 @@ export default function CapabilitiesSection() {
                     top: `${mousePos.y}px`,
                   }}
                 >
-                  {item.previewMockup}
+                  <div className="w-80 h-48 rounded-2xl bg-[#141720] shadow-[0_20px_50px_rgba(0,0,0,0.5)] border-2 border-white/60 overflow-hidden relative flex flex-col">
+                    {/* Window Header */}
+                    <div className="bg-[#111318] px-3.5 py-2 flex items-center justify-between border-b border-white/10 shrink-0">
+                      <div className="flex items-center gap-1.5">
+                        <div className="w-2 h-2 rounded-full bg-[#FF5F56]" />
+                        <div className="w-2 h-2 rounded-full bg-[#FFBD2E]" />
+                        <div className="w-2 h-2 rounded-full bg-[#27C93F]" />
+                        <span className="ml-2 text-[9px] font-mono text-white/70 uppercase tracking-wider">
+                          {item.title}
+                        </span>
+                      </div>
+                      <span className="text-[8px] font-mono font-bold text-[#F14E08] bg-[#F14E08]/15 px-2 py-0.5 rounded-full">
+                        {item.id}
+                      </span>
+                    </div>
+
+                    {/* Image Preview Container */}
+                    <div className="relative flex-1 w-full bg-[#0A0B0E] overflow-hidden">
+                      <Image
+                        src={item.imageSrc}
+                        alt={item.title}
+                        fill
+                        sizes="320px"
+                        className="w-full h-full object-cover object-top opacity-100"
+                      />
+                    </div>
+                  </div>
                 </div>
 
               </Link>

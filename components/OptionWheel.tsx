@@ -41,18 +41,18 @@ export default function OptionWheel({
   defaultSelected = 0,
   onChange,
   onSelect,
-  textColor = "#a6a6a6",
+  textColor = "#888888",
   activeColor = "#F14E08",
   side = "left",
-  fontSize = 2.2,
-  spacing = 1.4,
-  curve = 1,
-  tilt = 6,
-  blur = 2,
-  fade = 0.25,
-  minOpacity = 0.05,
-  smoothing = 200,
-  inset = 30,
+  fontSize = 2.4,
+  spacing = 1.35,
+  curve = 1.1,
+  tilt = 10,
+  blur = 1.2,
+  fade = 0.28,
+  minOpacity = 0.08,
+  smoothing = 140,
+  inset = 35,
   loop = false,
   draggable = true,
   soundUrl = "",
@@ -69,8 +69,18 @@ export default function OptionWheel({
   const onChangeRef = useRef(onChange);
   const selectedRef = useRef<number>(defaultSelected);
   const wheelTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const dragRef = useRef<{ y: number; start: number; id: number } | null>(null);
+  
+  // Touch & Drag state with velocity tracking for mobile flick momentum
+  const dragRef = useRef<{
+    startY: number;
+    lastY: number;
+    startTime: number;
+    lastTime: number;
+    startTarget: number;
+    velocity: number;
+  } | null>(null);
   const dragMovedRef = useRef<boolean>(false);
+  
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioUrlRef = useRef<string>("");
   const lastTickRef = useRef<number>(0);
@@ -119,6 +129,7 @@ export default function OptionWheel({
     const mirror = cfg.side === "right" ? -1 : 1;
     const tiltRad = (cfg.tilt * Math.PI) / 180;
     const R = tiltRad > 0.0005 ? cfg.rowH / tiltRad : 0;
+
     for (let i = 0; i < n; i++) {
       const el = els[i];
       if (!el) continue;
@@ -137,7 +148,7 @@ export default function OptionWheel({
         x = -mirror * R * (1 - Math.cos(ang)) * cfg.curve;
         rot = (mirror * ang * 180) / Math.PI;
       }
-      el.style.transform = `translate(${x.toFixed(2)}px, calc(${y.toFixed(2)}px - 50%)) rotate(${rot.toFixed(3)}deg)`;
+      el.style.transform = `translate3d(${x.toFixed(2)}px, calc(${y.toFixed(2)}px - 50%), 0) rotate(${rot.toFixed(3)}deg)`;
       el.style.opacity = String(Math.max(cfg.minOpacity, 1 - dist * cfg.fade));
       el.style.filter = cfg.blur > 0 ? `blur(${(dist * cfg.blur).toFixed(2)}px)` : "none";
       el.style.setProperty("--ow-p", Math.max(0, 1 - Math.min(dist, 1)).toFixed(4));
@@ -190,6 +201,7 @@ export default function OptionWheel({
     [startLoop, playTick]
   );
 
+  // Mouse wheel listener
   useEffect(() => {
     const el = rootRef.current;
     if (!el) return;
@@ -197,10 +209,10 @@ export default function OptionWheel({
       e.preventDefault();
       const cfg = cfgRef.current;
       const delta = e.deltaMode === 1 ? e.deltaY * 24 : e.deltaY;
-      const step = Math.max(-1, Math.min(1, delta / cfg.rowH));
+      const step = Math.max(-1.5, Math.min(1.5, delta / cfg.rowH));
       applyTarget(targetRef.current + step, false);
       if (wheelTimerRef.current) clearTimeout(wheelTimerRef.current);
-      wheelTimerRef.current = setTimeout(() => applyTarget(targetRef.current, true), 140);
+      wheelTimerRef.current = setTimeout(() => applyTarget(targetRef.current, true), 120);
     };
     el.addEventListener("wheel", onWheel, { passive: false });
     return () => {
@@ -209,36 +221,75 @@ export default function OptionWheel({
     };
   }, [applyTarget]);
 
+  // Unified Pointer / Touch Down
   const handlePointerDown = useCallback((e: React.PointerEvent) => {
     if (!cfgRef.current.draggable) return;
-    dragRef.current = { y: e.clientY, start: targetRef.current, id: e.pointerId };
+    const now = performance.now();
+    dragRef.current = {
+      startY: e.clientY,
+      lastY: e.clientY,
+      startTime: now,
+      lastTime: now,
+      startTarget: targetRef.current,
+      velocity: 0,
+    };
     dragMovedRef.current = false;
     setIsDragging(true);
   }, []);
 
+  // Unified Pointer / Touch Move with Velocity Tracking
   const handlePointerMove = useCallback(
     (e: React.PointerEvent) => {
       const drag = dragRef.current;
       if (!drag) return;
-      const dy = e.clientY - drag.y;
-      if (!dragMovedRef.current && Math.abs(dy) > 4) {
+
+      const now = performance.now();
+      const dy = e.clientY - drag.startY;
+      const stepDy = e.clientY - drag.lastY;
+      const stepDt = Math.max(now - drag.lastTime, 1);
+
+      // Instant velocity calculation in px/ms
+      const instantVelocity = stepDy / stepDt;
+      drag.velocity = drag.velocity * 0.7 + instantVelocity * 0.3;
+      drag.lastY = e.clientY;
+      drag.lastTime = now;
+
+      if (!dragMovedRef.current && Math.abs(dy) > 5) {
         dragMovedRef.current = true;
-        rootRef.current?.setPointerCapture(drag.id);
       }
-      if (dragMovedRef.current) applyTarget(drag.start - dy / cfgRef.current.rowH, false);
+
+      if (dragMovedRef.current) {
+        const rowH = cfgRef.current.rowH;
+        applyTarget(drag.startTarget - dy / rowH, false);
+      }
     },
     [applyTarget]
   );
 
+  // Unified Pointer / Touch End with Inertial Momentum Glide
   const handlePointerEnd = useCallback(() => {
-    if (!dragRef.current) return;
-    dragRef.current = null;
+    const drag = dragRef.current;
+    if (!drag) return;
+
     setIsDragging(false);
-    if (dragMovedRef.current) applyTarget(targetRef.current, true);
+
+    if (dragMovedRef.current) {
+      // Calculate inertial momentum from flick velocity
+      const rowH = cfgRef.current.rowH;
+      const flickSpeed = drag.velocity * 120; // velocity projected over 120ms
+      const momentumSteps = -(flickSpeed / rowH);
+      const projectedTarget = targetRef.current + momentumSteps;
+      
+      applyTarget(Math.round(projectedTarget), true);
+    }
+
+    dragRef.current = null;
   }, [applyTarget]);
 
+  // Click on Item
   const handleItemClick = useCallback(
-    (index: number) => {
+    (index: number, e: React.MouseEvent) => {
+      e.stopPropagation();
       if (dragMovedRef.current) return;
       const cfg = cfgRef.current;
       const cur = targetRef.current;
@@ -287,7 +338,7 @@ export default function OptionWheel({
       className={`option-wheel${side === "right" ? " option-wheel--right" : ""}${isDragging ? " option-wheel--dragging" : ""}${className ? ` ${className}` : ""}`}
       style={{
         "--ow-text-color": textColor,
-        "--ow-[#F14E08]": activeColor,
+        "--ow-active-color": activeColor,
         "--ow-font-size": `${fontSize}rem`,
         "--ow-inset": `${inset}px`,
       } as React.CSSProperties}
@@ -306,7 +357,7 @@ export default function OptionWheel({
           role="option"
           aria-selected={selectedIndex === index}
           className={`option-wheel__item${selectedIndex === index ? " option-wheel__item--selected" : ""}`}
-          onClick={() => handleItemClick(index)}
+          onClick={(e) => handleItemClick(index, e)}
         >
           {label}
         </div>

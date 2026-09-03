@@ -23,7 +23,7 @@ export default function Home() {
 
       {/* ScrollExpand transition section right after Selected Work ends */}
       <ScrollExpand
-        src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2070&auto=format&fit=crop"
+        src="/showcase-experience.jpg"
         alt="Digital Showcase"
         title="BUILDING DIGITAL EXPERIENCES"
         scrollHint="SCROLL TO EXPAND ↓"

@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -32,7 +33,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
       <Navbar />
 
       <main className="w-full py-16 px-6 md:px-12 lg:px-16">
-        <div className="max-w-[1400px] mx-auto space-y-20">
+        <div className="max-w-[1400px] mx-auto space-y-16">
           
           {/* HERO */}
           <section className="space-y-8 pt-6 border-b border-black/10 pb-16">
@@ -108,29 +109,49 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
               </div>
             </div>
 
-            {/* Main Visual Showcase Frame */}
-            <div className="w-full bg-[#0B0C10] text-white rounded-3xl p-8 sm:p-12 shadow-2xl border border-black/10 mt-8 aspect-[16/9] flex flex-col justify-between relative overflow-hidden">
-              <div className="flex items-center justify-between text-xs text-white/70 border-b border-white/10 pb-4">
-                <div className="font-bold text-white uppercase text-sm flex items-center gap-2">
-                  <span className="text-[#F14E08]">👑</span> {project.title}
+            {/* Main Visual Showcase Frame: Fully Bright, 100% Visible & Crisp */}
+            <div className="w-full bg-[#1A1D24] text-white rounded-3xl overflow-hidden shadow-2xl border border-black/15 mt-8 group">
+              {/* Window Header Bar */}
+              <div className="bg-[#111318] px-5 py-3.5 flex items-center justify-between border-b border-white/10">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-[#FF5F56] border border-[#E0443E]" />
+                  <div className="w-3 h-3 rounded-full bg-[#FFBD2E] border border-[#DEA123]" />
+                  <div className="w-3 h-3 rounded-full bg-[#27C93F] border border-[#1AAB29]" />
+                  <span className="ml-3 text-[11px] font-mono text-white/50 hidden sm:inline-block">
+                    {project.title} — Live Showcase
+                  </span>
                 </div>
-                <div className="text-xs text-white/50 bg-white/5 px-3 py-1 rounded-full border border-white/10">
-                  {project.category}
+                <div className="flex items-center gap-3">
+                  <span className="text-[10px] font-mono uppercase bg-white/10 text-white/90 px-3 py-1 rounded-full border border-white/15">
+                    {project.category}
+                  </span>
+                  <span className="text-[10px] font-mono font-bold text-[#F14E08] bg-[#F14E08]/15 px-3 py-1 rounded-full border border-[#F14E08]/30">
+                    PRODUCTION READY ✓
+                  </span>
                 </div>
               </div>
 
-              <div className="my-auto space-y-4 max-w-2xl">
-                <h2 className="text-2xl sm:text-4xl font-black text-white uppercase leading-tight">
+              {/* Full-Fidelity 100% Bright Showcase Image */}
+              <div className="relative w-full aspect-[16/9] bg-[#0E1015]">
+                <Image
+                  src={project.image}
+                  alt={project.title}
+                  fill
+                  priority
+                  sizes="(max-width: 1400px) 100vw, 1400px"
+                  className="object-contain sm:object-cover object-top w-full h-full group-hover:scale-[1.01] transition-transform duration-500 ease-out"
+                />
+              </div>
+
+              {/* Window Footer Info Strip */}
+              <div className="bg-[#111318] px-6 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-t border-white/10 text-xs text-white/70">
+                <div className="font-mono flex items-center gap-2">
+                  <span className="text-[#F14E08] font-bold">TECH:</span>
+                  <span className="text-white/90 font-semibold">{project.technologies.join(" • ")}</span>
+                </div>
+                <div className="text-[11px] text-white/50 font-medium">
                   {project.subtitle}
-                </h2>
-                <p className="text-white/70 text-sm leading-relaxed hidden sm:block">
-                  {project.shortDesc}
-                </p>
-              </div>
-
-              <div className="flex items-center justify-between text-xs text-white/50 border-t border-white/10 pt-4 font-mono">
-                <span>TECH: {project.technologies.join(" • ")}</span>
-                <span className="text-[#F14E08] font-bold">PRODUCTION READY ✓</span>
+                </div>
               </div>
             </div>
           </section>
@@ -191,7 +212,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
               {project.features.map((feature, idx) => (
-                <div key={idx} className="bg-white/70 p-6 rounded-2xl border border-black/5 flex items-start gap-4">
+                <div key={idx} className="bg-white/70 p-6 rounded-2xl border border-black/5 flex items-start gap-4 shadow-sm">
                   <span className="text-[#F14E08] font-bold text-lg select-none pt-0.5">✱</span>
                   <p className="text-sm font-extrabold text-[#111111] leading-relaxed">
                     {feature}

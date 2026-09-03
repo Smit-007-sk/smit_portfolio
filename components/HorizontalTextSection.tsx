@@ -30,7 +30,7 @@ export default function HorizontalTextSection() {
     // Set initial position
     gsap.set(text, { x: startX });
 
-    // 3. Pin Section for 2.2x total scroll distance so section stays pinned until 100% finished
+    // 3. Pin Section for 2.2x total scroll distance
     const scrollTween = gsap.to(text, {
       x: endX,
       ease: "none",
@@ -39,7 +39,7 @@ export default function HorizontalTextSection() {
         pin: true,
         pinSpacing: true,
         start: "top top",
-        end: () => `+=${Math.max(6500, (text.scrollWidth + window.innerWidth) * 2.2)}px`,
+        end: () => `+=${Math.max(5500, (text.scrollWidth + window.innerWidth) * 2.0)}px`,
         scrub: 1,
         anticipatePin: 1,
         invalidateOnRefresh: true,
@@ -48,8 +48,8 @@ export default function HorizontalTextSection() {
 
     // 4. Character bounce & rotation entrance
     chars.forEach((char) => {
-      const randomY = (Math.random() - 0.5) * 280;
-      const randomRot = (Math.random() - 0.5) * 40;
+      const randomY = (Math.random() - 0.5) * 260;
+      const randomRot = (Math.random() - 0.5) * 35;
 
       gsap.fromTo(
         char,
@@ -79,7 +79,7 @@ export default function HorizontalTextSection() {
     // Refresh layout measurements
     const timeout = setTimeout(() => {
       ScrollTrigger.refresh();
-    }, 400);
+    }, 300);
 
     return () => {
       clearTimeout(timeout);
@@ -90,22 +90,24 @@ export default function HorizontalTextSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full h-screen bg-[#0B0C10] text-white flex flex-col justify-center overflow-hidden select-none border-t border-b border-white/10"
+      className="relative w-full h-[100dvh] min-h-[100dvh] max-h-[100dvh] bg-[#0B0C10] text-white flex flex-col justify-between overflow-hidden select-none border-t border-b border-white/10"
     >
       {/* Background Subtle Gradient Glow */}
-      <div className="absolute inset-0 bg-gradient-to-r from-purple-900/10 via-[#F14E08]/10 to-indigo-900/10 pointer-events-none"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-purple-900/10 via-[#F14E08]/10 to-indigo-900/10 pointer-events-none" />
 
-      {/* Top Tag */}
-      <div className="absolute top-12 left-6 md:left-16 z-20 flex items-center gap-3 text-xs md:text-sm font-extrabold uppercase tracking-widest text-[#F14E08]">
-        <span className="w-2 h-2 rounded-full bg-[#F14E08] animate-pulse"></span>
-        <span>LET&apos;S COLLABORATE</span>
+      {/* Top Tag Header */}
+      <div className="w-full pt-8 sm:pt-12 px-6 md:px-16 z-20 flex items-center justify-between shrink-0">
+        <div className="flex items-center gap-2.5 text-xs md:text-sm font-extrabold uppercase tracking-widest text-[#F14E08]">
+          <span className="w-2 h-2 rounded-full bg-[#F14E08] animate-pulse" />
+          <span>LET&apos;S COLLABORATE</span>
+        </div>
       </div>
 
-      {/* Main Horizontal Text Container */}
-      <div className="w-full overflow-hidden px-6 md:px-12 py-10 relative z-10">
+      {/* Main Horizontal Text Container in Center */}
+      <div className="w-full overflow-hidden px-6 md:px-12 my-auto py-4 relative z-10">
         <h2
           ref={textRef}
-          className="font-brooks-display inline-block whitespace-nowrap text-[12vw] sm:text-[10vw] md:text-[8.5vw] lg:text-[7.5vw] font-black uppercase tracking-wide text-white leading-none will-change-transform drop-shadow-lg"
+          className="font-brooks-display inline-block whitespace-nowrap text-[13vw] sm:text-[10vw] md:text-[8.5vw] lg:text-[7.5vw] font-black uppercase tracking-wide text-white leading-none will-change-transform drop-shadow-lg"
         >
           {headlineText.split("").map((char, index) => {
             const isOrangeWord = index >= headlineText.indexOf("UNFORGETTABLE");
@@ -128,11 +130,11 @@ export default function HorizontalTextSection() {
         </h2>
       </div>
 
-      {/* Bottom CTA Button */}
-      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-20 flex items-center gap-4">
+      {/* Bottom CTA Button Safely Anchored Above Bottom Screen Edge */}
+      <div className="w-full pb-8 sm:pb-12 px-6 z-20 flex items-center justify-center shrink-0">
         <Link
           href="/contact"
-          className="inline-flex items-center gap-2 bg-[#F14E08] text-white text-xs sm:text-sm font-extrabold uppercase tracking-wider px-8 py-4 rounded-full hover:bg-white hover:text-black transition-all shadow-2xl group border border-white/20"
+          className="inline-flex items-center gap-2 bg-[#F14E08] text-white text-xs sm:text-sm font-extrabold uppercase tracking-wider px-7 py-3.5 sm:px-8 sm:py-4 rounded-full hover:bg-white hover:text-black transition-all shadow-2xl group border border-white/20 active:scale-95"
         >
           <span>START A PROJECT</span>
           <svg className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

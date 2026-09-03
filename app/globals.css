@@ -22,6 +22,11 @@ html, body {
   scroll-behavior: smooth;
 }
 
+img, video, canvas {
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
 /* Lenis Smooth Scroll CSS */
 html.lenis, html.lenis body {
   height: auto;
@@ -58,10 +63,19 @@ html.lenis, html.lenis body {
 
 /* Infinite Marquee Ticker */
 @keyframes marquee {
-  0% { transform: translateX(0%); }
-  100% { transform: translateX(-50%); }
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
 }
 
 .animate-marquee {
+  display: flex;
+  width: max-content;
+  will-change: transform;
   animation: marquee 25s linear infinite;
+}
+
+@media (min-width: 768px) {
+  .animate-marquee {
+    animation: marquee 36s linear infinite;
+  }
 }

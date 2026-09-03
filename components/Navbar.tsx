@@ -16,6 +16,7 @@ export default function Navbar() {
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
     { name: "Work", href: "/work" },
+    { name: "Services", href: "/services" },
     { name: "Contact", href: "/contact" },
   ];
 
@@ -24,7 +25,6 @@ export default function Navbar() {
     { label: "ABOUT", href: "/about" },
     { label: "WORK", href: "/work" },
     { label: "SERVICES", href: "/services" },
-    { label: "SKILLS", href: "/skills" },
     { label: "CONTACT", href: "/contact" },
   ];
 
@@ -50,6 +50,11 @@ export default function Navbar() {
       text: "WORK",
       link: "/work",
       image: "/navbar/work.jpg",
+    },
+    {
+      text: "SERVICES",
+      link: "/services",
+      image: "/capabilities/web-experiences-v2.jpg",
     },
     {
       text: "CONTACT",
@@ -170,16 +175,16 @@ export default function Navbar() {
             <OptionWheel
               items={mobileNavItems.map((i) => i.label)}
               defaultSelected={currentMobileIndex}
-              textColor="#666666"
-              activeColor="#F14E08"
+              textColor="#777777"
+              activeColor="#FFFFFF"
               side="left"
-              fontSize={2.5}
-              spacing={1.4}
-              curve={1.2}
-              tilt={8}
-              blur={1.5}
-              fade={0.3}
-              inset={40}
+              fontSize={2.3}
+              spacing={1.35}
+              curve={1.0}
+              tilt={10}
+              blur={1}
+              fade={0.28}
+              inset={35}
               onSelect={handleMobileSelect}
             />
           </div>

@@ -16,6 +16,7 @@ export default function Footer() {
     { label: "About", href: "/about" },
     { label: "Work", href: "/work" },
     { label: "Services", href: "/services" },
+    { label: "Skills", href: "/skills" },
     { label: "Contact", href: "/contact" },
   ];
 
@@ -36,28 +37,24 @@ export default function Footer() {
       <div className="max-w-[1500px] mx-auto relative z-10">
         
         {/* Top Marquee Banner Ticker */}
-        <div className="w-full overflow-hidden border-b border-white/10 pb-12 mb-16">
-          <div className="flex whitespace-nowrap animate-marquee">
-            <div className="flex items-center gap-8 font-brooks-display text-4xl sm:text-6xl lg:text-7xl font-black uppercase tracking-tight text-white/90 shrink-0 pr-8">
-              <span>LET&apos;S TALK</span>
-              <span className="text-[#F14E08]">•</span>
-              <span>SMIT KHATRI</span>
-              <span className="text-[#F14E08]">•</span>
-              <span>FULL-STACK DEVELOPER</span>
-              <span className="text-[#F14E08]">•</span>
-              <span>AVAILABLE FOR WORK</span>
-              <span className="text-[#F14E08]">•</span>
-            </div>
-            <div className="flex items-center gap-8 font-brooks-display text-4xl sm:text-6xl lg:text-7xl font-black uppercase tracking-tight text-white/90 shrink-0 pr-8" aria-hidden="true">
-              <span>LET&apos;S TALK</span>
-              <span className="text-[#F14E08]">•</span>
-              <span>SMIT KHATRI</span>
-              <span className="text-[#F14E08]">•</span>
-              <span>FULL-STACK DEVELOPER</span>
-              <span className="text-[#F14E08]">•</span>
-              <span>AVAILABLE FOR WORK</span>
-              <span className="text-[#F14E08]">•</span>
-            </div>
+        <div className="w-full overflow-hidden border-b border-white/10 pb-12 mb-16 select-none">
+          <div className="flex w-max whitespace-nowrap animate-marquee">
+            {[...Array(4)].map((_, i) => (
+              <div
+                key={i}
+                className="flex items-center gap-6 sm:gap-8 font-brooks-display text-4xl sm:text-6xl lg:text-7xl font-black uppercase tracking-tight text-white/90 shrink-0 pr-6 sm:pr-8"
+                aria-hidden={i > 0 ? "true" : undefined}
+              >
+                <span>LET&apos;S TALK</span>
+                <span className="text-[#F14E08]">•</span>
+                <span>SMIT KHATRI</span>
+                <span className="text-[#F14E08]">•</span>
+                <span>FULL-STACK DEVELOPER</span>
+                <span className="text-[#F14E08]">•</span>
+                <span>AVAILABLE FOR WORK</span>
+                <span className="text-[#F14E08]">•</span>
+              </div>
+            ))}
           </div>
         </div>
 

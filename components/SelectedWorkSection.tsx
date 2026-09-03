@@ -3,63 +3,36 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { projectsData } from "@/data/projects";
+
+// Project badges & tags dictionary matching the updated project catalog
+const projectMetaMap: Record<string, { badge: string; tag: string }> = {
+  "millionaire-digital": { badge: "3D & IMMERSIVE", tag: "CREATIVE STUDIO" },
+  "nexora-crm": { badge: "LEAD & WORKFLOW", tag: "SAAS PLATFORM" },
+  "emperor-media": { badge: "30+ TEMPLATES", tag: "MARKETING & CMS" },
+  "dental-website-uk": { badge: "HEALTHCARE UI", tag: "PHP & WEB" },
+  "spotify-clone": { badge: "AUDIO STREAMING", tag: "MUSIC PLAYER" },
+  "ecommerce-platform": { badge: "CART & STOREFRONT", tag: "ONLINE RETAIL" },
+};
 
 export default function SelectedWorkSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [translateX, setTranslateX] = useState(0);
   const [activeProject, setActiveProject] = useState(1);
-  const [sectionHeight, setSectionHeight] = useState("380vh");
+  const [sectionHeight, setSectionHeight] = useState("420vh");
 
-  const projects = [
-    {
-      id: "01",
-      slug: "emperor-media",
-      title: "EMPEROR MEDIA SOLUTION",
-      category: "Digital Platform",
-      tag: "AGENCY PLATFORM",
-      image: "/projects/emperor-media.jpg",
-      badge: "GLOBAL MEDIA NETWORK"
-    },
-    {
-      id: "02",
-      slug: "taskly",
-      title: "TASKLY APP",
-      category: "Task Management Application",
-      tag: "PRODUCTIVITY APP",
-      image: "/projects/taskly.jpg",
-      badge: "PRODUCTIVITY SUITE"
-    },
-    {
-      id: "03",
-      slug: "velora-store",
-      title: "VELORA STORE",
-      category: "E-Commerce Website",
-      tag: "FASHION E-COMMERCE",
-      image: "/projects/velora-store.jpg",
-      badge: "EDITORIAL FASHION"
-    },
-    {
-      id: "04",
-      slug: "nexus-analytics",
-      title: "NEXUS ANALYTICS",
-      category: "Analytics Dashboard",
-      tag: "DATA VISUALIZATION",
-      image: "/projects/nexus-analytics.jpg",
-      badge: "ENTERPRISE METRICS"
-    },
-    {
-      id: "05",
-      slug: "pulse-health",
-      title: "PULSE HEALTH",
-      category: "Telehealth & Fitness Platform",
-      tag: "HEALTH & WELLNESS",
-      image: "/projects/pulse-health.jpg",
-      badge: "BIOMETRIC PORTAL"
-    },
-  ];
+  const projects = projectsData.map((p) => ({
+    id: p.id,
+    slug: p.slug,
+    title: p.title,
+    category: p.subtitle,
+    tag: projectMetaMap[p.slug]?.tag || p.category,
+    image: p.image,
+    badge: projectMetaMap[p.slug]?.badge || "FEATURED PROJECT",
+  }));
 
-  // Helper to calculate exact max travel in pixels so Card 05 is 100% visible
+  // Helper to calculate exact max travel in pixels so Card 06 is 100% visible
   const getMaxTravel = () => {
     if (!trackRef.current) return 0;
     const track = trackRef.current;
@@ -87,7 +60,7 @@ export default function SelectedWorkSection() {
     calculateDimensions();
     window.addEventListener("resize", calculateDimensions);
     return () => window.removeEventListener("resize", calculateDimensions);
-  }, []);
+  }, [projects.length]);
 
   // Sync vertical scroll progress directly to horizontal translation
   useEffect(() => {
@@ -102,8 +75,8 @@ export default function SelectedWorkSection() {
       const maxTravel = getMaxTravel();
       setTranslateX(progress * maxTravel);
 
-      // Calculate active card 1 through 5
-      const cardIndex = Math.min(Math.floor(progress * 5) + 1, 5);
+      // Calculate active card index
+      const cardIndex = Math.min(Math.floor(progress * projects.length) + 1, projects.length);
       setActiveProject(cardIndex);
     };
 
@@ -114,7 +87,7 @@ export default function SelectedWorkSection() {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleScroll);
     };
-  }, []);
+  }, [projects.length]);
 
   const scrollToCard = (index: number) => {
     if (!sectionRef.current) return;
@@ -146,7 +119,7 @@ export default function SelectedWorkSection() {
 
           <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 pt-1">
             <p className="text-neutral-700 text-md sm:text-lg md:text-xl leading-relaxed max-w-xl font-medium">
-              A curated selection of 5 digital products where strategy, design, and full-stack engineering come together.
+              A curated selection of {projects.length} digital products where strategy, design, and full-stack engineering come together.
             </p>
 
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
@@ -196,9 +169,9 @@ export default function SelectedWorkSection() {
                     </svg>
                   </button>
                   <button
-                    onClick={() => scrollToCard(activeProject < 5 ? activeProject + 1 : 5)}
+                    onClick={() => scrollToCard(activeProject < projects.length ? activeProject + 1 : projects.length)}
                     className="w-8 h-8 rounded-full border-2 border-[#F14E08] text-[#F14E08] hover:bg-[#F14E08] hover:text-white transition-all flex items-center justify-center shadow-sm active:scale-95 disabled:opacity-30 cursor-pointer"
-                    disabled={activeProject === 5}
+                    disabled={activeProject === projects.length}
                     aria-label="Next project"
                   >
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -212,7 +185,7 @@ export default function SelectedWorkSection() {
           </div>
         </div>
 
-        {/* BOTTOM SECTION: DYNAMICALLY SCROLLING 5 CARDS TRACK */}
+        {/* BOTTOM SECTION: DYNAMICALLY SCROLLING CARDS TRACK */}
         <div className="w-full max-w-[1600px] mx-auto flex-1 flex items-center overflow-hidden relative my-6">
           <div
             ref={trackRef}
@@ -223,62 +196,61 @@ export default function SelectedWorkSection() {
           >
             {projects.map((proj) => (
               <div key={proj.id} className="w-[85vw] sm:w-[75vw] md:w-[65vw] lg:w-[56vw] max-w-[840px] shrink-0 group">
-                <div className="bg-white/90 backdrop-blur-md rounded-3xl p-6 sm:p-8 lg:p-10 shadow-xl transition-all duration-300 hover:-translate-y-2 border border-black/10 hover:border-[#F14E08]/60 flex flex-col justify-between h-[46vh] sm:h-[48vh] lg:h-[50vh] max-h-[500px]">
+                <div className="bg-white/95 backdrop-blur-md rounded-3xl p-5 sm:p-7 shadow-xl transition-all duration-300 hover:-translate-y-2 border border-black/10 hover:border-[#F14E08]/60 flex flex-col justify-between h-[46vh] sm:h-[48vh] lg:h-[50vh] max-h-[500px]">
                   
                   {/* Visual Image Showcase Container */}
-                  <div className="w-full bg-[#0B0C10] rounded-2xl overflow-hidden relative flex-1 border border-black/10 group-hover:border-[#F14E08]/40 transition-colors shadow-inner">
-                    {/* High-Resolution Showcase Image */}
-                    <div className="absolute inset-0 w-full h-full overflow-hidden">
+                  <div className="w-full bg-[#12141A] rounded-2xl overflow-hidden relative flex-1 border border-black/10 group-hover:border-[#F14E08]/40 transition-colors shadow-inner flex flex-col">
+                    
+                    {/* Top Header Badge Overlay */}
+                    <div className="bg-[#111318]/90 backdrop-blur-md px-4 py-2.5 flex items-center justify-between border-b border-white/10 z-10">
+                      <div className="flex items-center gap-1.5">
+                        <div className="w-2 h-2 rounded-full bg-[#FF5F56]" />
+                        <div className="w-2 h-2 rounded-full bg-[#FFBD2E]" />
+                        <div className="w-2 h-2 rounded-full bg-[#27C93F]" />
+                        <span className="ml-2 text-[10px] font-mono text-white/70 uppercase tracking-wider">
+                          {proj.badge}
+                        </span>
+                      </div>
+                      <span className="text-[9px] font-black uppercase tracking-widest bg-[#F14E08] text-white px-2.5 py-0.5 rounded-full shadow-sm">
+                        {proj.tag}
+                      </span>
+                    </div>
+
+                    {/* High-Resolution Fully-Visible Image */}
+                    <div className="relative w-full flex-1 overflow-hidden bg-[#0A0B0E]">
                       <Image
                         src={proj.image}
                         alt={proj.title}
                         fill
                         priority={proj.id === "01" || proj.id === "02"}
                         sizes="(max-width: 768px) 85vw, 56vw"
-                        className="object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+                        className="object-cover object-top w-full h-full opacity-100 group-hover:scale-105 transition-transform duration-700 ease-out"
                       />
-                      {/* Gradient Overlay for Text Readability */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/20 pointer-events-none"></div>
-                    </div>
-
-                    {/* Top Header Badge Overlay */}
-                    <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-10">
-                      <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest bg-black/60 backdrop-blur-md text-white px-3 py-1.5 rounded-full border border-white/20">
-                        {proj.badge}
-                      </span>
-                      <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest bg-[#F14E08] text-white px-3 py-1.5 rounded-full shadow-sm">
-                        {proj.tag}
-                      </span>
-                    </div>
-
-                    {/* Bottom Title & Tag Overlay inside Image Frame */}
-                    <div className="absolute bottom-4 left-4 right-4 z-10 space-y-1">
-                      <div className="text-xl sm:text-2xl font-black text-white uppercase tracking-tight drop-shadow-md">
-                        {proj.title}
-                      </div>
-                      <div className="text-xs text-white/80 font-medium">
-                        {proj.category}
-                      </div>
                     </div>
                   </div>
 
                   {/* Card Footer */}
-                  <div className="flex items-end justify-between pt-4">
-                    <div className="flex items-baseline gap-4">
-                      <span className="text-3xl sm:text-4xl font-black text-[#F14E08]">{proj.id}</span>
-                      <div>
-                        <h3 className="text-lg sm:text-xl font-black uppercase text-[#111111] tracking-wide">
+                  <div className="flex items-center justify-between pt-3 px-1 gap-2 min-w-0 overflow-hidden">
+                    <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                      <span className="text-xl sm:text-3xl font-black text-[#F14E08] font-mono shrink-0">
+                        {proj.id}
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <h3 className="text-xs sm:text-lg font-black uppercase text-[#111111] tracking-wide truncate">
                           {proj.title}
                         </h3>
-                        <p className="text-xs text-neutral-600 font-bold uppercase tracking-wider">{proj.category}</p>
+                        <p className="text-[10px] sm:text-xs text-neutral-600 font-bold uppercase tracking-wider truncate">
+                          {proj.category}
+                        </p>
                       </div>
                     </div>
 
                     <Link
                       href={`/work/${proj.slug}`}
-                      className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-[#F14E08] hover:text-[#111111] transition-colors group-hover:translate-x-1"
+                      className="inline-flex items-center gap-1 text-[11px] sm:text-xs font-black uppercase tracking-wider text-[#F14E08] hover:text-[#111111] transition-colors shrink-0 bg-black/5 hover:bg-[#F14E08] hover:text-white px-3 py-1.5 rounded-full"
                     >
-                      <span>VIEW CASE STUDY</span>
+                      <span className="hidden sm:inline">VIEW CASE STUDY</span>
+                      <span className="sm:hidden">VIEW</span>
                       <span>↗</span>
                     </Link>
                   </div>

@@ -71,7 +71,7 @@ export default function WorkPage() {
           >
             {filteredProjects.map((project) => (
               <ScrollStackItem key={project.slug}>
-                <div className="bg-[#0B0C10] text-white rounded-3xl p-6 sm:p-10 shadow-2xl border border-white/10 transition-all duration-300 group">
+                <div className="bg-[#0E1015] text-white rounded-3xl p-6 sm:p-8 lg:p-10 shadow-2xl border border-white/10 transition-all duration-300 group">
                   <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                     
                     {/* Project Info (Cols 1-5) */}
@@ -86,9 +86,13 @@ export default function WorkPage() {
                           </span>
                         </div>
 
-                        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black uppercase text-white tracking-wide mb-4 group-hover:text-[#F14E08] transition-colors">
+                        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black uppercase text-white tracking-wide mb-3 group-hover:text-[#F14E08] transition-colors">
                           {project.title}
                         </h2>
+
+                        <p className="text-[#F14E08] text-xs font-bold uppercase tracking-wider mb-4">
+                          {project.subtitle}
+                        </p>
 
                         <p className="text-white/70 text-xs sm:text-sm leading-relaxed font-medium mb-6">
                           {project.shortDesc}
@@ -99,7 +103,7 @@ export default function WorkPage() {
                           {project.technologies.map((tech) => (
                             <span
                               key={tech}
-                              className="bg-white/10 text-white/80 text-[10px] font-bold uppercase px-3 py-1 rounded-full border border-white/10"
+                              className="bg-white/10 text-white/90 text-[10px] font-bold uppercase px-3 py-1 rounded-full border border-white/10"
                             >
                               {tech}
                             </span>
@@ -109,56 +113,40 @@ export default function WorkPage() {
 
                       <Link
                         href={`/work/${project.slug}`}
-                        className="inline-flex items-center gap-2 text-xs sm:text-sm font-extrabold uppercase tracking-wider text-white hover:text-[#F14E08] transition-colors underline decoration-2 underline-offset-4 group/link"
+                        className="inline-flex items-center gap-2 text-xs sm:text-sm font-extrabold uppercase tracking-wider text-[#F14E08] hover:text-white transition-colors underline decoration-2 underline-offset-4 group/link"
                       >
                         <span>VIEW CASE STUDY ↗</span>
                       </Link>
                     </div>
 
-                    {/* Mockup Frame (Cols 6-12) */}
+                    {/* Clean & Bright Mockup Frame (Cols 6-12) */}
                     <div className="lg:col-span-7">
-                      <div className="w-full bg-[#12141C] rounded-2xl overflow-hidden border border-white/10 aspect-[16/10] flex flex-col justify-between relative group-hover:border-white/20 transition-colors">
-                        {/* Background UI Showcase Image */}
-                        <div className="absolute inset-0 w-full h-full overflow-hidden">
+                      <div className="w-full bg-[#1A1D24] rounded-2xl overflow-hidden border border-white/15 shadow-xl flex flex-col group-hover:border-[#F14E08]/50 transition-colors">
+                        
+                        {/* Browser Window Header */}
+                        <div className="bg-[#111318] px-4 py-3 flex items-center justify-between border-b border-white/10">
+                          <div className="flex items-center gap-1.5">
+                            <div className="w-2.5 h-2.5 rounded-full bg-[#FF5F56]" />
+                            <div className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E]" />
+                            <div className="w-2.5 h-2.5 rounded-full bg-[#27C93F]" />
+                            <span className="ml-2 text-[10px] font-mono text-white/50 truncate max-w-[200px]">
+                              {project.title}
+                            </span>
+                          </div>
+                          <span className="text-[9px] font-mono uppercase bg-white/10 text-white/80 px-2.5 py-0.5 rounded-full border border-white/10">
+                            {project.category}
+                          </span>
+                        </div>
+
+                        {/* 100% Bright Project Screenshot Container */}
+                        <div className="relative w-full aspect-[16/10] bg-[#0A0B0E] overflow-hidden">
                           <Image
                             src={project.image}
                             alt={project.title}
                             fill
                             sizes="(max-width: 1024px) 100vw, 50vw"
-                            className="object-cover object-top opacity-35 group-hover:scale-105 transition-transform duration-700"
+                            className="object-cover object-top w-full h-full opacity-100 group-hover:scale-[1.02] transition-transform duration-500 ease-out"
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-[#0B0C10] via-[#0B0C10]/80 to-[#0B0C10]/60 pointer-events-none" />
-                        </div>
-
-                        {/* Frame Header */}
-                        <div className="relative z-10 flex items-center justify-between text-xs uppercase text-white/70 border-b border-white/10 p-6 pb-3">
-                          <div className="flex items-center gap-2 font-bold text-white">
-                            <span className="text-[#F14E08]">⚡</span> {project.title}
-                          </div>
-                          <div className="text-[10px] text-white/60 bg-white/5 px-2.5 py-1 rounded-md border border-white/10">
-                            {project.category}
-                          </div>
-                        </div>
-
-                        {/* Frame Content */}
-                        <div className="relative z-10 my-auto px-6 py-4 space-y-3">
-                          <h3 className="text-lg sm:text-2xl font-black text-white leading-tight">
-                            {project.subtitle}
-                          </h3>
-                          <p className="text-white/70 text-xs max-w-lg hidden sm:block font-medium">
-                            {project.overview}
-                          </p>
-                        </div>
-
-                        {/* Frame Footer */}
-                        <div className="relative z-10 flex items-center justify-between text-[10px] text-white/50 border-t border-white/10 p-6 pt-3">
-                          <span>Role: {project.role}</span>
-                          <Link
-                            href={`/work/${project.slug}`}
-                            className="text-[#F14E08] font-bold hover:underline"
-                          >
-                            CASE STUDY ↗
-                          </Link>
                         </div>
 
                       </div>

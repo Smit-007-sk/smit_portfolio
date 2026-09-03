@@ -10,28 +10,27 @@ export default function SmoothScrollProvider({ children }: { children: React.Rea
     gsap.registerPlugin(ScrollTrigger);
 
     const lenis = new Lenis({
-      duration: 1.0,
+      duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
       wheelMultiplier: 1.0,
-      touchMultiplier: 1.0,
-      syncTouch: true,
+      touchMultiplier: 1.2,
     });
 
-    // Synchronize Lenis scroll updates directly with GSAP ScrollTrigger
+    // Synchronize Lenis with GSAP ScrollTrigger
     lenis.on("scroll", ScrollTrigger.update);
 
-    const updateLenis = (time: number) => {
+    const updateTicker = (time: number) => {
       lenis.raf(time * 1000);
     };
 
-    gsap.ticker.add(updateLenis);
+    gsap.ticker.add(updateTicker);
     gsap.ticker.lagSmoothing(0);
 
     return () => {
-      gsap.ticker.remove(updateLenis);
+      gsap.ticker.remove(updateTicker);
       lenis.destroy();
     };
   }, []);

@@ -15,70 +15,80 @@ export default function HorizontalTextSection() {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
+    ScrollTrigger.config({
+      ignoreMobileResize: true,
+      autoRefreshEvents: "visibilitychange,DOMContentLoaded,load",
+    });
+
     const section = sectionRef.current;
     const text = textRef.current;
     if (!section || !text) return;
 
     const chars = charsRef.current.filter(Boolean) as HTMLSpanElement[];
 
-    const ctx = gsap.context(() => {
-      // 1. Calculate travel bounds
-      const startX = window.innerWidth * 0.75;
-      const endX = -(text.scrollWidth + window.innerWidth * 0.25);
+    // 1. Initial start position (starts off-screen right)
+    const startX = window.innerWidth * 0.75;
+    
+    // 2. Final target position (clears completely off-screen left)
+    const endX = -(text.scrollWidth + window.innerWidth * 0.3);
 
-      gsap.set(text, { x: startX });
-      gsap.set(chars, {
-        yPercent: () => (Math.random() - 0.5) * 180,
-        rotation: () => (Math.random() - 0.5) * 30,
-        opacity: 0,
-        scale: 0.6,
-      });
+    // Set initial position
+    gsap.set(text, { x: startX });
 
-      // 2. Single unified timeline bound to the pin scrollTrigger
-      // anticipatePin: 0 ensures the pin triggers ONLY when reaching 100% of the preceding section
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: section,
-          pin: true,
-          pinSpacing: true,
-          start: "top top",
-          end: () => `+=${Math.max(window.innerHeight * 2.2, (text.scrollWidth + window.innerWidth) * 1.4)}px`,
-          scrub: 0.4,
-          anticipatePin: 0,
-          invalidateOnRefresh: true,
-        },
-      });
+    // 3. Pin Section for natural 2.0x scroll distance
+    const scrollTween = gsap.to(text, {
+      x: endX,
+      ease: "none",
+      scrollTrigger: {
+        trigger: section,
+        pin: true,
+        pinSpacing: true,
+        start: "top top",
+        end: () => `+=${Math.max(5000, (text.scrollWidth + window.innerWidth) * 1.8)}px`,
+        scrub: 1,
+        anticipatePin: 0,
+        invalidateOnRefresh: true,
+      },
+    });
 
-      // Translate text horizontally
-      tl.to(
-        text,
+    // 4. Character bounce & rotation entrance
+    chars.forEach((char) => {
+      const randomY = (Math.random() - 0.5) * 240;
+      const randomRot = (Math.random() - 0.5) * 30;
+
+      gsap.fromTo(
+        char,
         {
-          x: endX,
-          ease: "none",
+          yPercent: randomY,
+          rotation: randomRot,
+          opacity: 0,
+          scale: 0.5,
         },
-        0
-      );
-
-      // Animate character bounce & entrance seamlessly with the master timeline
-      tl.to(
-        chars,
         {
           yPercent: 0,
           rotation: 0,
           opacity: 1,
           scale: 1,
-          ease: "power2.out",
-          stagger: {
-            each: 0.012,
-            from: "start",
+          ease: "back.out(1.5)",
+          scrollTrigger: {
+            trigger: char,
+            containerAnimation: scrollTween,
+            start: "left 98%",
+            end: "left 20%",
+            scrub: 1,
           },
-        },
-        0
+        }
       );
-    }, sectionRef);
+    });
+
+    // Refresh layout measurements
+    const timeout = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 250);
 
     return () => {
-      ctx.revert();
+      clearTimeout(timeout);
+      ScrollTrigger.getAll().forEach((t) => t.kill());
     };
   }, []);
 
@@ -125,8 +135,8 @@ export default function HorizontalTextSection() {
         </h2>
       </div>
 
-      {/* Bottom CTA Button Rock-Solid Anchored Inside Pinned Container */}
-      <div className="w-full pb-8 sm:pb-12 px-6 z-20 flex items-center justify-center shrink-0">
+      {/* Bottom CTA Button Safely Anchored Above Bottom Screen Edge */}
+      <div className="w-full pb-10 sm:pb-14 px-6 z-20 flex items-center justify-center shrink-0 pointer-events-auto">
         <Link
           href="/contact"
           className="inline-flex items-center gap-2 bg-[#F14E08] text-white text-xs sm:text-sm font-extrabold uppercase tracking-wider px-7 py-3.5 sm:px-8 sm:py-4 rounded-full hover:bg-white hover:text-black transition-all shadow-2xl group border border-white/20 active:scale-95"

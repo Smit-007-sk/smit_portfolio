@@ -21,76 +21,71 @@ export default function HorizontalTextSection() {
 
     const chars = charsRef.current.filter(Boolean) as HTMLSpanElement[];
 
-    // 1. Initial start position (starts off-screen right)
-    const startX = window.innerWidth * 0.75;
-    
-    // 2. Final target position (clears completely off-screen left)
-    const endX = -(text.scrollWidth + window.innerWidth * 0.3);
+    const ctx = gsap.context(() => {
+      // 1. Calculate travel bounds
+      const startX = window.innerWidth * 0.75;
+      const endX = -(text.scrollWidth + window.innerWidth * 0.25);
 
-    // Set initial position
-    gsap.set(text, { x: startX });
+      gsap.set(text, { x: startX });
+      gsap.set(chars, {
+        yPercent: () => (Math.random() - 0.5) * 180,
+        rotation: () => (Math.random() - 0.5) * 30,
+        opacity: 0,
+        scale: 0.6,
+      });
 
-    // 3. Pin Section for 2.2x total scroll distance
-    const scrollTween = gsap.to(text, {
-      x: endX,
-      ease: "none",
-      scrollTrigger: {
-        trigger: section,
-        pin: true,
-        pinSpacing: true,
-        start: "top top",
-        end: () => `+=${Math.max(5500, (text.scrollWidth + window.innerWidth) * 2.0)}px`,
-        scrub: 1,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-      },
-    });
-
-    // 4. Character bounce & rotation entrance
-    chars.forEach((char) => {
-      const randomY = (Math.random() - 0.5) * 260;
-      const randomRot = (Math.random() - 0.5) * 35;
-
-      gsap.fromTo(
-        char,
-        {
-          yPercent: randomY,
-          rotation: randomRot,
-          opacity: 0,
-          scale: 0.5,
+      // 2. Single unified timeline bound to the pin scrollTrigger
+      // anticipatePin: 0 ensures the pin triggers ONLY when reaching 100% of the preceding section
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          pin: true,
+          pinSpacing: true,
+          start: "top top",
+          end: () => `+=${Math.max(window.innerHeight * 2.2, (text.scrollWidth + window.innerWidth) * 1.4)}px`,
+          scrub: 0.4,
+          anticipatePin: 0,
+          invalidateOnRefresh: true,
         },
+      });
+
+      // Translate text horizontally
+      tl.to(
+        text,
+        {
+          x: endX,
+          ease: "none",
+        },
+        0
+      );
+
+      // Animate character bounce & entrance seamlessly with the master timeline
+      tl.to(
+        chars,
         {
           yPercent: 0,
           rotation: 0,
           opacity: 1,
           scale: 1,
-          ease: "back.out(1.5)",
-          scrollTrigger: {
-            trigger: char,
-            containerAnimation: scrollTween,
-            start: "left 98%",
-            end: "left 20%",
-            scrub: 1,
+          ease: "power2.out",
+          stagger: {
+            each: 0.012,
+            from: "start",
           },
-        }
+        },
+        0
       );
-    });
-
-    // Refresh layout measurements
-    const timeout = setTimeout(() => {
-      ScrollTrigger.refresh();
-    }, 300);
+    }, sectionRef);
 
     return () => {
-      clearTimeout(timeout);
-      ScrollTrigger.getAll().forEach((t) => t.kill());
+      ctx.revert();
     };
   }, []);
 
   return (
     <section
       ref={sectionRef}
-      className="relative w-full h-[100dvh] min-h-[100dvh] max-h-[100dvh] bg-[#0B0C10] text-white flex flex-col justify-between overflow-hidden select-none border-t border-b border-white/10"
+      className="relative w-full h-screen bg-[#0B0C10] text-white flex flex-col justify-between overflow-hidden select-none border-t border-b border-white/10"
     >
       {/* Background Subtle Gradient Glow */}
       <div className="absolute inset-0 bg-gradient-to-r from-purple-900/10 via-[#F14E08]/10 to-indigo-900/10 pointer-events-none" />
@@ -130,7 +125,7 @@ export default function HorizontalTextSection() {
         </h2>
       </div>
 
-      {/* Bottom CTA Button Safely Anchored Above Bottom Screen Edge */}
+      {/* Bottom CTA Button Rock-Solid Anchored Inside Pinned Container */}
       <div className="w-full pb-8 sm:pb-12 px-6 z-20 flex items-center justify-center shrink-0">
         <Link
           href="/contact"

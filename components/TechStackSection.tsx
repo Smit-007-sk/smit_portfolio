@@ -160,7 +160,7 @@ export default function TechStackSection() {
   return (
     <section 
       id="stack" 
-      className="relative w-full bg-[#f4e5ffb5] text-[#111111] py-20 px-6 md:px-12 lg:px-16 border-t border-black/10 select-none overflow-hidden"
+      className="relative w-full bg-[#F4F1EA] text-[#111111] py-20 px-6 md:px-12 lg:px-16 border-t border-black/10 select-none overflow-hidden"
     >
       <div className="max-w-[1500px] mx-auto">
         

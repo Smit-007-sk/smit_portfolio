@@ -53,41 +53,49 @@ function deriveFontFamilyFromUrl(url: string) {
 }
 
 async function loadFontFromStylesheet(url: string) {
+  if (typeof window === "undefined" || typeof document === "undefined") return "CircularGalleryFont";
+  const FontFaceConstructor = (window as any).FontFace;
+  if (!FontFaceConstructor) return "CircularGalleryFont";
+
   const response = await fetch(url);
   if (!response.ok) throw new Error(`Failed to fetch font stylesheet (${response.status})`);
   const cssText = await response.text();
   const faceBlocks = cssText.match(/@font-face\s*{[^}]*}/g) || [];
   let family: string | null = null;
-  const fontFaces: FontFace[] = [];
+  const fontFaces: any[] = [];
   for (const block of faceBlocks) {
     const familyMatch = block.match(/font-family:\s*['"]?([^;'"]+)['"]?/);
     const urlMatch = block.match(/url\(\s*['"]?([^'")]+)['"]?\s*\)/);
     if (!familyMatch || !urlMatch) continue;
     family = familyMatch[1].trim();
-    const descriptors: FontFaceDescriptors = {};
+    const descriptors: Record<string, string> = {};
     const weightMatch = block.match(/font-weight:\s*([^;]+);/);
     const styleMatch = block.match(/font-style:\s*([^;]+);/);
     const rangeMatch = block.match(/unicode-range:\s*([^;]+);/);
     if (weightMatch) descriptors.weight = weightMatch[1].trim();
     if (styleMatch) descriptors.style = styleMatch[1].trim();
     if (rangeMatch) descriptors.unicodeRange = rangeMatch[1].trim();
-    fontFaces.push(new FontFace(family, `url(${urlMatch[1]})`, descriptors));
+    fontFaces.push(new FontFaceConstructor(family, `url(${urlMatch[1]})`, descriptors));
   }
   if (!family) throw new Error("No @font-face rule found in the stylesheet");
   await Promise.allSettled(
     fontFaces.map(async (face) => {
       await face.load();
-      document.fonts.add(face);
+      (document as any).fonts?.add(face);
     })
   );
   return family;
 }
 
 async function loadFontFromFile(url: string) {
+  if (typeof window === "undefined" || typeof document === "undefined") return "CircularGalleryFont";
+  const FontFaceConstructor = (window as any).FontFace;
+  if (!FontFaceConstructor) return "CircularGalleryFont";
+
   const family = deriveFontFamilyFromUrl(url);
-  const fontFace = new FontFace(family, `url(${url})`);
+  const fontFace = new FontFaceConstructor(family, `url(${url})`);
   await fontFace.load();
-  document.fonts.add(fontFace);
+  (document as any).fonts?.add(fontFace);
   return family;
 }
 

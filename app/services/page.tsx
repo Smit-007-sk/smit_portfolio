@@ -1,10 +1,16 @@
-"use client";
-
-import React from "react";
-import Link from "next/link";
+import dynamic from "next/dynamic";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import CircularGallery, { CircularGalleryItem } from "@/components/CircularGallery";
+import type { CircularGalleryItem } from "@/components/CircularGallery";
+
+const CircularGallery = dynamic(() => import("@/components/CircularGallery"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full flex items-center justify-center">
+      <div className="w-8 h-8 rounded-full border-2 border-white/20 border-t-[#F14E08] animate-spin" />
+    </div>
+  ),
+});
 
 export default function ServicesPage() {
   const galleryItems: CircularGalleryItem[] = [

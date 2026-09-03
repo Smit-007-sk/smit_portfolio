@@ -103,33 +103,6 @@ export default function SourceProtectionProvider({
       return false;
     };
 
-    // 4. Overwrite & Clear Console Logs in Production
-    const disableConsole = () => {
-      try {
-        const noop = () => {};
-        window.console.log = noop;
-        window.console.debug = noop;
-        window.console.info = noop;
-        window.console.warn = noop;
-        window.console.dir = noop;
-        window.console.table = noop;
-      } catch {}
-    };
-
-    // 5. Anti-DevTools Debugger Trap in Production
-    let devtoolsInterval: NodeJS.Timeout | null = null;
-    disableConsole();
-
-    devtoolsInterval = setInterval(() => {
-      const before = performance.now();
-      // Debugger execution pauses if DevTools panel is open
-      (function () {})["constructor"]("debugger")();
-      const after = performance.now();
-      if (after - before > 100) {
-        window.location.reload();
-      }
-    }, 1000);
-
     // Attach event listeners for Production
     window.addEventListener("contextmenu", handleContextMenu, { capture: true });
     window.addEventListener("keydown", handleKeyDown, { capture: true });
@@ -139,7 +112,6 @@ export default function SourceProtectionProvider({
       window.removeEventListener("contextmenu", handleContextMenu, { capture: true });
       window.removeEventListener("keydown", handleKeyDown, { capture: true });
       window.removeEventListener("dragstart", handleDragStart, { capture: true });
-      if (devtoolsInterval) clearInterval(devtoolsInterval);
     };
   }, []);
 

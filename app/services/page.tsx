@@ -1,4 +1,7 @@
+"use client";
+
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import type { CircularGalleryItem } from "@/components/CircularGallery";

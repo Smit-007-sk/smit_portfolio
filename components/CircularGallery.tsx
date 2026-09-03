@@ -462,7 +462,7 @@ class App {
   scrollSpeed: number;
   autoScroll: boolean;
   autoScrollSpeed: number;
-  scroll: { ease: number; current: number; target: number; last: number };
+  scroll: { ease: number; current: number; target: number; last: number; position: number };
   onCheckDebounce: any;
   renderer: any;
   gl: any;
@@ -504,7 +504,7 @@ class App {
     this.scrollSpeed = scrollSpeed;
     this.autoScroll = autoScroll;
     this.autoScrollSpeed = autoScrollSpeed;
-    this.scroll = { ease: scrollEase, current: 0, target: 0, last: 0 };
+    this.scroll = { ease: scrollEase, current: 0, target: 0, last: 0, position: 0 };
     this.onCheckDebounce = debounce(this.onCheck.bind(this), 200);
     this.createRenderer();
     this.createCamera();

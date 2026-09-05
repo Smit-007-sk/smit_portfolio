@@ -133,54 +133,6 @@ export default function SelectedWorkSection() {
                   <polyline points="7 7 17 7 17 17" />
                 </svg>
               </Link>
-
-              {/* Index & Arrow controls */}
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2 text-xs font-black tracking-widest text-[#F14E08]">
-                  {projects.map((p, idx) => {
-                    const num = idx + 1;
-                    const isActive = activeProject === num;
-                    return (
-                      <button
-                        key={p.id}
-                        onClick={() => scrollToCard(num)}
-                        className={`transition-all duration-300 ${
-                          isActive
-                            ? "opacity-100 scale-125 font-black border-b-2 border-[#F14E08] pb-0.5"
-                            : "opacity-40 hover:opacity-80"
-                        }`}
-                      >
-                        {p.id}
-                      </button>
-                    );
-                  })}
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => scrollToCard(activeProject > 1 ? activeProject - 1 : 1)}
-                    className="w-8 h-8 rounded-full border-2 border-[#F14E08] text-[#F14E08] hover:bg-[#F14E08] hover:text-white transition-all flex items-center justify-center shadow-sm active:scale-95 disabled:opacity-30 cursor-pointer"
-                    disabled={activeProject === 1}
-                    aria-label="Previous project"
-                  >
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="19" y1="12" x2="5" y2="12" />
-                      <polyline points="12 19 5 12 12 5" />
-                    </svg>
-                  </button>
-                  <button
-                    onClick={() => scrollToCard(activeProject < projects.length ? activeProject + 1 : projects.length)}
-                    className="w-8 h-8 rounded-full border-2 border-[#F14E08] text-[#F14E08] hover:bg-[#F14E08] hover:text-white transition-all flex items-center justify-center shadow-sm active:scale-95 disabled:opacity-30 cursor-pointer"
-                    disabled={activeProject === projects.length}
-                    aria-label="Next project"
-                  >
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="5" y1="12" x2="19" y2="12" />
-                      <polyline points="12 5 19 12 12 19" />
-                    </svg>
-                  </button>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -231,18 +183,13 @@ export default function SelectedWorkSection() {
 
                   {/* Card Footer */}
                   <div className="flex items-center justify-between pt-3 px-1 gap-2 min-w-0 overflow-hidden">
-                    <div className="flex items-center gap-2.5 min-w-0 flex-1">
-                      <span className="text-xl sm:text-3xl font-black text-[#F14E08] font-mono shrink-0">
-                        {proj.id}
-                      </span>
-                      <div className="min-w-0 flex-1">
-                        <h3 className="text-xs sm:text-lg font-black uppercase text-[#111111] tracking-wide truncate">
-                          {proj.title}
-                        </h3>
-                        <p className="text-[10px] sm:text-xs text-neutral-600 font-bold uppercase tracking-wider truncate">
-                          {proj.category}
-                        </p>
-                      </div>
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-xs sm:text-lg font-black uppercase text-[#111111] tracking-wide truncate">
+                        {proj.title}
+                      </h3>
+                      <p className="text-[10px] sm:text-xs text-neutral-600 font-bold uppercase tracking-wider truncate">
+                        {proj.category}
+                      </p>
                     </div>
 
                     <Link

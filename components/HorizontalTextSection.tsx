@@ -29,13 +29,13 @@ export default function HorizontalTextSection() {
     // 1. Initial start position (starts off-screen right)
     const startX = window.innerWidth;
     
-    // 2. Final target position: stops with the final words "UNFORGETTABLE?" on screen, transitioning smoothly into Contact
-    const endX = -(text.scrollWidth - window.innerWidth + 60);
+    // 2. Final target position: completes when "UNFORGETTABLE?" reaches the left edge
+    const endX = -(text.scrollWidth + 20);
 
     // Set initial position
     gsap.set(text, { x: startX });
 
-    // 3. Pin Section with scroll distance tightly matched to text movement
+    // 3. Pin Section with scroll distance 1:1 synchronized so unpin happens exactly when text reaches left side
     const totalTravel = Math.abs(endX - startX);
     const scrollTween = gsap.to(text, {
       x: endX,
@@ -45,7 +45,7 @@ export default function HorizontalTextSection() {
         pin: true,
         pinSpacing: true,
         start: "top top",
-        end: () => `+=${Math.round(totalTravel * 0.95)}px`,
+        end: () => `+=${Math.round(totalTravel)}px`,
         scrub: 0.8,
         anticipatePin: 1,
         invalidateOnRefresh: true,
@@ -96,7 +96,7 @@ export default function HorizontalTextSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full h-screen bg-[#0B0C10] text-white flex items-center overflow-hidden select-none border-t border-b border-white/10"
+      className="relative w-full h-[100svh] min-h-[100svh] bg-[#0B0C10] text-white flex items-center overflow-hidden select-none border-t border-b border-white/10"
     >
       {/* Background Subtle Gradient Glow */}
       <div className="absolute inset-0 bg-gradient-to-r from-purple-900/10 via-[#F14E08]/10 to-indigo-900/10 pointer-events-none" />
@@ -134,8 +134,8 @@ export default function HorizontalTextSection() {
         </h2>
       </div>
 
-      {/* Bottom CTA Button Safely Anchored with absolute positioning to prevent jump */}
-      <div className="absolute bottom-8 sm:bottom-10 left-0 right-0 z-20 flex items-center justify-center pointer-events-auto px-6">
+      {/* Bottom CTA Button: Elevated with bottom-16 on mobile for 100% visibility above browser bars */}
+      <div className="absolute bottom-16 sm:bottom-12 md:bottom-10 left-0 right-0 z-20 flex items-center justify-center pointer-events-auto px-6">
         <Link
           href="/contact"
           className="inline-flex items-center gap-2 bg-[#F14E08] text-white text-xs sm:text-sm font-extrabold uppercase tracking-wider px-7 py-3.5 sm:px-8 sm:py-4 rounded-full hover:bg-white hover:text-black transition-all shadow-2xl group border border-white/20 active:scale-95"

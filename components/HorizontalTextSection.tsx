@@ -26,16 +26,16 @@ export default function HorizontalTextSection() {
 
     const chars = charsRef.current.filter(Boolean) as HTMLSpanElement[];
 
-    // 1. Initial start position (starts completely off-screen to the right)
-    const startX = window.innerWidth + 80;
+    // 1. Initial start position (starts off-screen right)
+    const startX = window.innerWidth;
     
-    // 2. Final target position (clears completely off-screen left)
-    const endX = -(text.scrollWidth + window.innerWidth * 0.3);
+    // 2. Final target position (completes when final word passes through)
+    const endX = -(text.scrollWidth + 40);
 
     // Set initial position
     gsap.set(text, { x: startX });
 
-    // 3. Pin Section for natural 2.0x scroll distance
+    // 3. Pin Section with scroll distance tightly matched to text width (no empty lingering)
     const scrollTween = gsap.to(text, {
       x: endX,
       ease: "none",
@@ -44,7 +44,7 @@ export default function HorizontalTextSection() {
         pin: true,
         pinSpacing: true,
         start: "top top",
-        end: () => `+=${Math.max(5000, (text.scrollWidth + window.innerWidth) * 1.8)}px`,
+        end: () => `+=${Math.round(text.scrollWidth * 1.1 + window.innerWidth * 0.4)}px`,
         scrub: 1,
         anticipatePin: 0,
         invalidateOnRefresh: true,
@@ -95,7 +95,7 @@ export default function HorizontalTextSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full h-screen bg-[#0B0C10] text-white flex flex-col justify-between overflow-hidden select-none border-t border-b border-white/10"
+      className="relative w-full h-[100dvh] min-h-[100dvh] bg-[#0B0C10] text-white flex flex-col justify-between overflow-hidden select-none border-t border-b border-white/10"
     >
       {/* Background Subtle Gradient Glow */}
       <div className="absolute inset-0 bg-gradient-to-r from-purple-900/10 via-[#F14E08]/10 to-indigo-900/10 pointer-events-none" />

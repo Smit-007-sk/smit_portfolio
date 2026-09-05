@@ -128,9 +128,11 @@ export default function AboutMeSection() {
               </p>
 
               {/* Download Resume Link */}
-              <Link
+              <a
                 href="/resume.pdf"
+                download="Smit_Khatri_Resume.pdf"
                 target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 text-xs sm:text-sm font-extrabold uppercase tracking-wider text-[#F14E08] hover:text-[#111111] transition-colors group underline decoration-2 underline-offset-4"
               >
                 <span>DOWNLOAD RESUME</span>
@@ -139,7 +141,7 @@ export default function AboutMeSection() {
                   <polyline points="7 10 12 15 17 10" />
                   <line x1="12" y1="15" x2="12" y2="3" />
                 </svg>
-              </Link>
+              </a>
             </div>
           </div>
 

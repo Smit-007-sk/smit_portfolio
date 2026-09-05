@@ -85,6 +85,22 @@ export default function AboutPage() {
               <p className="text-neutral-700 text-sm sm:text-base md:text-lg leading-relaxed font-medium">
                 I work with startups, businesses, and ambitious ideas to turn concepts into polished digital products — from the first interaction to the final line of code.
               </p>
+              <div className="pt-2">
+                <a
+                  href="/resume.pdf"
+                  download="Smit_Khatri_Resume.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-xs sm:text-sm font-extrabold uppercase tracking-wider text-[#F14E08] hover:text-[#111111] transition-colors group underline decoration-2 underline-offset-4"
+                >
+                  <span>DOWNLOAD RESUME</span>
+                  <svg className="w-4 h-4 group-hover:translate-y-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                  </svg>
+                </a>
+              </div>
             </div>
           </section>
 

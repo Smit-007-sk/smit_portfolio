@@ -2,8 +2,8 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
+import { usePathname, useRouter } from "next/navigation";
 import FlowingMenu, { MenuItemData } from "@/components/FlowingMenu";
 import OptionWheel from "@/components/OptionWheel";
 
@@ -84,15 +84,17 @@ export default function Navbar() {
         <div className="flex items-center">
           <Link 
             href="/" 
-            className="flex items-center gap-2 hover:opacity-90 hover:scale-105 transition-all group"
+            className="flex items-center gap-2 hover:opacity-85 hover:scale-105 transition-all group"
             aria-label="Smit Khatri - Home"
           >
             <Image
-              src="/logo.png"
+              src="/final-logo.png"
               alt="SK Logo"
-              width={96}
-              height={96}
-              className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 object-contain drop-shadow-lg"
+              width={110}
+              height={110}
+              className={`w-14 h-14 sm:w-18 sm:h-18 md:w-22 md:h-22 object-contain drop-shadow-lg ${
+                !isHomePage ? "brightness-0" : ""
+              }`}
               priority
             />
           </Link>

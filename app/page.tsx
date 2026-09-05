@@ -38,9 +38,6 @@ export default function Home() {
         holdDistance={0.3}
       >
         <div className="max-w-3xl text-center space-y-5 px-6 select-none flex flex-col items-center">
-          <span className="text-[#F14E08] text-xs font-black uppercase tracking-widest bg-black/70 backdrop-blur-md px-4 py-2 rounded-full border border-white/20">
-            CRAFTSMANSHIP &amp; ENGINEERING
-          </span>
           <h2 className="font-brooks-display text-4xl sm:text-6xl md:text-7xl font-black text-white uppercase leading-tight drop-shadow-lg">
             READY TO TRANSFORM YOUR VISION?
           </h2>

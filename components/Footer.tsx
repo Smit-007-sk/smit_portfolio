@@ -65,18 +65,18 @@ export default function Footer() {
           {/* Column 1 (Cols 1-4): Brand & Status */}
           <div className="lg:col-span-4 flex flex-col justify-between space-y-6">
             <div>
-              {/* SK Logo Badge */}
+              {/* SK Logo */}
               <Link 
                 href="#hero"
-                className="inline-flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-white/5 border border-white/10 hover:border-[#F14E08]/50 p-2 shadow-lg hover:scale-105 transition-all group mb-6"
+                className="inline-block hover:opacity-85 hover:scale-105 transition-all group mb-6"
                 aria-label="Back to Top"
               >
                 <Image
-                  src="/logo.png"
+                  src="/final-logo.png"
                   alt="SK Logo"
-                  width={96}
-                  height={96}
-                  className="w-full h-full object-contain drop-shadow-md"
+                  width={120}
+                  height={120}
+                  className="w-18 h-18 sm:w-22 sm:h-22 md:w-28 md:h-28 object-contain drop-shadow-xl"
                 />
               </Link>
 

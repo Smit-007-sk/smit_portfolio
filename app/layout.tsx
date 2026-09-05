@@ -22,8 +22,8 @@ export const metadata: Metadata = {
   title: "SMIT KHATRI — Full-Stack Developer Portfolio",
   description: "Full-Stack Web Developer & UI/UX Architect crafting high-performance digital products, web applications, and interactive web experiences.",
   icons: {
-    icon: "/logo.png",
-    apple: "/logo.png",
+    icon: "/final-logo.png",
+    apple: "/final-logo.png",
   },
 };
 

@@ -163,9 +163,6 @@ export default function SelectedWorkSection() {
                           {proj.badge}
                         </span>
                       </div>
-                      <span className="text-[9px] font-black uppercase tracking-widest bg-[#F14E08] text-white px-2.5 py-0.5 rounded-full shadow-sm">
-                        {proj.tag}
-                      </span>
                     </div>
 
                     {/* High-Resolution Fully-Visible Image */}

@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import Image from "next/image";
 import FlowingMenu, { MenuItemData } from "@/components/FlowingMenu";
 import OptionWheel from "@/components/OptionWheel";
 
@@ -75,7 +76,7 @@ export default function Navbar() {
     <>
       {/* Standard Header */}
       <header 
-        className={`w-full py-6 px-6 md:px-12 lg:px-16 flex items-center justify-between relative z-40 transition-colors select-none ${
+        className={`w-full py-5 px-6 md:px-12 lg:px-16 flex items-center justify-between relative z-40 transition-colors select-none ${
           isHomePage ? "bg-transparent text-white" : "bg-[#F4F1EA] text-[#111111] border-b border-black/10"
         }`}
       >
@@ -83,11 +84,17 @@ export default function Navbar() {
         <div className="flex items-center">
           <Link 
             href="/" 
-            className={`text-base md:text-xl font-black tracking-widest uppercase hover:opacity-80 transition-all ${
-              isHomePage ? "text-white" : "text-[#111111]"
-            }`}
+            className="flex items-center gap-2 hover:opacity-85 hover:scale-105 transition-all group"
+            aria-label="Smit Khatri - Home"
           >
-            SK
+            <Image
+              src="/logo.png"
+              alt="SK Logo"
+              width={52}
+              height={52}
+              className="w-9 h-9 sm:w-11 sm:h-11 object-contain drop-shadow-md"
+              priority
+            />
           </Link>
         </div>
 

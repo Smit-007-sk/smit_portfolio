@@ -21,6 +21,10 @@ const displaySerif = Fraunces({
 export const metadata: Metadata = {
   title: "SMIT KHATRI — Full-Stack Developer Portfolio",
   description: "Full-Stack Web Developer & UI/UX Architect crafting high-performance digital products, web applications, and interactive web experiences.",
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
 };
 
 export const viewport: Viewport = {

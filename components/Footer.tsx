@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Footer() {
   const scrollToTop = () => {
@@ -67,9 +68,16 @@ export default function Footer() {
               {/* SK Logo Badge */}
               <Link 
                 href="#hero"
-                className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-[#F14E08] text-white font-extrabold text-xl tracking-tight mb-6 shadow-lg hover:scale-105 transition-transform"
+                className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white/5 border border-white/10 hover:border-[#F14E08]/50 p-2 shadow-lg hover:scale-105 transition-all group mb-6"
+                aria-label="Back to Top"
               >
-                SK
+                <Image
+                  src="/logo.png"
+                  alt="SK Logo"
+                  width={64}
+                  height={64}
+                  className="w-full h-full object-contain drop-shadow-md"
+                />
               </Link>
 
               {/* Tagline */}

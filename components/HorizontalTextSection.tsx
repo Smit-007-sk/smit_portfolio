@@ -27,7 +27,7 @@ export default function HorizontalTextSection() {
     const chars = charsRef.current.filter(Boolean) as HTMLSpanElement[];
 
     // 1. Initial start position (starts off-screen right)
-    const startX = window.innerWidth;
+    const startX = window.innerWidth * 0.75;
     
     // 2. Final target position (clears completely off-screen left)
     const endX = -(text.scrollWidth + window.innerWidth * 0.3);

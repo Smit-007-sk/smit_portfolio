@@ -58,12 +58,6 @@ export default function Home() {
       {/* Tech Stack Section */}
       <TechStackSection />
 
-      {/* Mobile-only Blank Transition Screen: Completely covers the screen before the pinned Are You Ready section */}
-      <div 
-        className="w-full h-screen bg-[#0B0C10] md:hidden relative z-10 pointer-events-none" 
-        aria-hidden="true" 
-      />
-
       {/* GSAP Horizontal Scroll Text Animation */}
       <HorizontalTextSection />
 

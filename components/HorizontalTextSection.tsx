@@ -52,31 +52,36 @@ export default function HorizontalTextSection() {
       },
     });
 
-    // 4. Character bounce & rotation entrance
+    // 4. Character alternating UP and DOWN entrance
+    let letterCount = 0;
     chars.forEach((char) => {
-      const randomY = (Math.random() - 0.5) * 160;
-      const randomRot = (Math.random() - 0.5) * 20;
+      const textContent = char.textContent?.trim();
+      const isSpace = !textContent;
+
+      // Determine alternating direction for each letter: Even index from UP, Odd index from DOWN
+      const isFromUp = letterCount % 2 === 0;
+      if (!isSpace) {
+        letterCount++;
+      }
+
+      const initialY = isFromUp ? -120 : 120;
 
       gsap.fromTo(
         char,
         {
-          yPercent: randomY,
-          rotation: randomRot,
+          yPercent: initialY,
           opacity: 0,
-          scale: 0.7,
         },
         {
           yPercent: 0,
-          rotation: 0,
           opacity: 1,
-          scale: 1,
           ease: "power2.out",
           scrollTrigger: {
             trigger: char,
             containerAnimation: scrollTween,
-            start: "left 98%",
-            end: "left 30%",
-            scrub: 0.8,
+            start: "left 95%",
+            end: "left 45%",
+            scrub: 0.6,
           },
         }
       );
@@ -108,7 +113,7 @@ export default function HorizontalTextSection() {
       </div>
 
       {/* Main Horizontal Text Container in Center */}
-      <div className="w-full overflow-hidden px-6 md:px-12 py-4 relative z-10">
+      <div className="w-full overflow-visible px-6 md:px-12 py-8 relative z-10">
         <h2
           ref={textRef}
           className="font-brooks-display inline-block whitespace-nowrap text-[13vw] sm:text-[10vw] md:text-[8.5vw] lg:text-[7.5vw] font-black uppercase tracking-wide text-white leading-none will-change-transform drop-shadow-lg"

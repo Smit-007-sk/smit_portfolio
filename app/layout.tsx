@@ -22,8 +22,9 @@ export const metadata: Metadata = {
   title: "SMIT KHATRI — Full-Stack Developer Portfolio",
   description: "Full-Stack Web Developer & UI/UX Architect crafting high-performance digital products, web applications, and interactive web experiences.",
   icons: {
-    icon: "/final-logo.png",
-    apple: "/final-logo.png",
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
   },
 };
 
@@ -49,6 +50,9 @@ export default function RootLayout({
       className={`${sans.variable} ${displaySerif.variable} antialiased bg-[#0B0C10] text-white selection:bg-white selection:text-[#F14E08]`}
     >
       <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/favicon.ico" />
         <meta name="theme-color" content="#0B0C10" />
         <meta name="msapplication-navbutton-color" content="#0B0C10" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />

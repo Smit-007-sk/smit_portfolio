@@ -34,7 +34,6 @@ export default function SkillsPage() {
       description: "Professional developer toolchain ensuring clean code collaboration and production readiness.",
       skills: [
         { name: "Git & GitHub", desc: "Version control, feature branching, pull request workflows" },
-        { name: "VS Code", desc: "Custom extensions, linting, debugging & efficient coding" },
         { name: "Performance Optimization", desc: "Lighthouse audits, asset compression, bundle size reduction" },
         { name: "Responsive Architecture", desc: "Cross-device compatibility from mobile to 4K displays" },
       ],

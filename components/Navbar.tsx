@@ -183,7 +183,7 @@ export default function Navbar() {
               blur={1}
               fade={0.28}
               inset={35}
-              loop={true}
+              loop={false}
               onSelect={handleMobileSelect}
             />
           </div>

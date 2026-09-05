@@ -187,8 +187,16 @@ export default function OptionWheel({
     (value: number, snap: boolean) => {
       const cfg = cfgRef.current;
       let v = value;
-      if (!cfg.loop) v = Math.min(Math.max(v, 0), Math.max(cfg.count - 1, 0));
-      if (snap) v = Math.round(v);
+      if (!cfg.loop) {
+        if (snap) {
+          v = Math.min(Math.max(Math.round(v), 0), cfg.count - 1);
+        } else {
+          // Elastic bounds during drag: maximum 0.35 overscroll
+          v = Math.min(Math.max(v, -0.35), cfg.count - 1 + 0.35);
+        }
+      } else if (snap) {
+        v = Math.round(v);
+      }
       targetRef.current = v;
       const idx = ((Math.round(v) % cfg.count) + cfg.count) % cfg.count;
       if (idx !== selectedRef.current) {

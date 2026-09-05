@@ -84,15 +84,15 @@ export default function Navbar() {
         <div className="flex items-center">
           <Link 
             href="/" 
-            className="flex items-center gap-2 hover:opacity-85 hover:scale-105 transition-all group"
+            className="flex items-center gap-2 hover:opacity-90 hover:scale-105 transition-all group"
             aria-label="Smit Khatri - Home"
           >
             <Image
               src="/logo.png"
               alt="SK Logo"
-              width={52}
-              height={52}
-              className="w-9 h-9 sm:w-11 sm:h-11 object-contain drop-shadow-md"
+              width={96}
+              height={96}
+              className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 object-contain drop-shadow-lg"
               priority
             />
           </Link>

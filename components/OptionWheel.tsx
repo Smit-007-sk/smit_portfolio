@@ -84,6 +84,7 @@ export default function OptionWheel({
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioUrlRef = useRef<string>("");
   const lastTickRef = useRef<number>(0);
+  const isDraggingRef = useRef<boolean>(false);
   const [selectedIndex, setSelectedIndex] = useState<number>(defaultSelected);
   const [isDragging, setIsDragging] = useState<boolean>(false);
 
@@ -114,7 +115,7 @@ export default function OptionWheel({
     const dt = Math.min((now - lastRef.current) / 1000, 0.05);
     lastRef.current = now;
     const cfg = cfgRef.current;
-    const tau = Math.max(cfg.smoothing, 1) / 1000;
+    const tau = isDraggingRef.current ? 0.025 : Math.max(cfg.smoothing, 1) / 1000;
     const k = 1 - Math.exp(-dt / tau);
 
     const target = targetRef.current;
@@ -221,9 +222,12 @@ export default function OptionWheel({
     };
   }, [applyTarget]);
 
-  // Unified Pointer / Touch Down
+  // Unified Pointer / Touch Down (Holds the wheel)
   const handlePointerDown = useCallback((e: React.PointerEvent) => {
     if (!cfgRef.current.draggable) return;
+    try {
+      (e.target as HTMLElement)?.setPointerCapture?.(e.pointerId);
+    } catch {}
     const now = performance.now();
     dragRef.current = {
       startY: e.clientY,
@@ -234,10 +238,11 @@ export default function OptionWheel({
       velocity: 0,
     };
     dragMovedRef.current = false;
+    isDraggingRef.current = true;
     setIsDragging(true);
   }, []);
 
-  // Unified Pointer / Touch Move with Velocity Tracking
+  // Unified Pointer / Touch Move with 1:1 Instant Drag Tracking
   const handlePointerMove = useCallback(
     (e: React.PointerEvent) => {
       const drag = dragRef.current;
@@ -250,11 +255,11 @@ export default function OptionWheel({
 
       // Instant velocity calculation in px/ms
       const instantVelocity = stepDy / stepDt;
-      drag.velocity = drag.velocity * 0.7 + instantVelocity * 0.3;
+      drag.velocity = drag.velocity * 0.6 + instantVelocity * 0.4;
       drag.lastY = e.clientY;
       drag.lastTime = now;
 
-      if (!dragMovedRef.current && Math.abs(dy) > 5) {
+      if (!dragMovedRef.current && Math.abs(dy) > 3) {
         dragMovedRef.current = true;
       }
 
@@ -266,17 +271,22 @@ export default function OptionWheel({
     [applyTarget]
   );
 
-  // Unified Pointer / Touch End with Inertial Momentum Glide
-  const handlePointerEnd = useCallback(() => {
+  // Unified Pointer / Touch End with Momentum Glide and Snap
+  const handlePointerEnd = useCallback((e: React.PointerEvent) => {
     const drag = dragRef.current;
     if (!drag) return;
 
+    try {
+      (e.target as HTMLElement)?.releasePointerCapture?.(e.pointerId);
+    } catch {}
+
+    isDraggingRef.current = false;
     setIsDragging(false);
 
     if (dragMovedRef.current) {
-      // Calculate inertial momentum from flick velocity
+      // Calculate momentum from release velocity
       const rowH = cfgRef.current.rowH;
-      const flickSpeed = drag.velocity * 120; // velocity projected over 120ms
+      const flickSpeed = drag.velocity * 100;
       const momentumSteps = -(flickSpeed / rowH);
       const projectedTarget = targetRef.current + momentumSteps;
       

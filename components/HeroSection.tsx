@@ -13,22 +13,26 @@ export default function HeroSection() {
           <DecryptedText
             text="SMIT"
             sequential={true}
-            animateOn="inViewHover"
-            speed={150}
+            animateOn="view"
+            speed={100}
             maxIterations={15}
             revealDirection="start"
             className="text-white"
             encryptedClassName="text-white/70"
+            delay={2250}
+            retriggerDelay={0}
           />
           <DecryptedText
             text="KHATRI"
             sequential={true}
-            animateOn="inViewHover"
-            speed={150}
+            animateOn="view"
+            speed={100}
             maxIterations={15}
             revealDirection="start"
             className="text-white"
             encryptedClassName="text-white/70"
+            delay={2450}
+            retriggerDelay={180}
           />
         </h1>
       </div>

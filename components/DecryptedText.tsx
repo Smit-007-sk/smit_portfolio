@@ -33,6 +33,9 @@ export interface DecryptedTextProps extends HTMLMotionProps<"span"> {
   encryptedClassName?: string;
   animateOn?: "view" | "hover" | "inViewHover" | "click";
   clickMode?: "once" | "toggle";
+  delay?: number;
+  retriggerDelay?: number;
+  retriggerOnView?: boolean;
 }
 
 export default function DecryptedText({
@@ -48,6 +51,9 @@ export default function DecryptedText({
   encryptedClassName = "",
   animateOn = "hover",
   clickMode = "once",
+  delay = 0,
+  retriggerDelay,
+  retriggerOnView = true,
   ...props
 }: DecryptedTextProps) {
   const [displayText, setDisplayText] = useState(text);
@@ -139,12 +145,14 @@ export default function DecryptedText({
       orderRef.current = computeOrder(text.length);
       pointerRef.current = 0;
       setRevealedIndices(new Set());
+      setDisplayText(shuffleText(text, new Set()));
     } else {
       setRevealedIndices(new Set());
+      setDisplayText(shuffleText(text, new Set()));
     }
     setDirection("forward");
     setIsAnimating(true);
-  }, [sequential, computeOrder, text.length]);
+  }, [sequential, computeOrder, text.length, shuffleText, text]);
 
   const triggerReverse = useCallback(() => {
     if (sequential) {
@@ -311,10 +319,10 @@ export default function DecryptedText({
 
     setRevealedIndices(new Set());
     setIsDecrypted(false);
-    setDisplayText(text);
+    setDisplayText(shuffleText(text, new Set()));
     setDirection("forward");
     setIsAnimating(true);
-  }, [isAnimating, text]);
+  }, [isAnimating, text, shuffleText]);
 
   const resetToPlainText = useCallback(() => {
     if (intervalRef.current) clearInterval(intervalRef.current);
@@ -329,11 +337,37 @@ export default function DecryptedText({
   useEffect(() => {
     if (animateOn !== "view" && animateOn !== "inViewHover") return;
 
+    let timeoutId: NodeJS.Timeout | null = null;
+    let isFirstIntersect = true;
+    let isCurrentlyVisible = false;
+
     const observerCallback: IntersectionObserverCallback = (entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting && !hasAnimated) {
-          triggerDecrypt();
-          setHasAnimated(true);
+        if (entry.isIntersecting) {
+          if (!isCurrentlyVisible) {
+            isCurrentlyVisible = true;
+            if (timeoutId) clearTimeout(timeoutId);
+
+            const waitTime = isFirstIntersect
+              ? (delay ?? 0)
+              : (retriggerDelay !== undefined ? retriggerDelay : (sequential ? 100 : 0));
+            isFirstIntersect = false;
+
+            if (waitTime > 0) {
+              timeoutId = setTimeout(() => {
+                triggerDecrypt();
+              }, waitTime);
+            } else {
+              triggerDecrypt();
+            }
+          }
+        } else {
+          isCurrentlyVisible = false;
+          if (timeoutId) clearTimeout(timeoutId);
+          if (!retriggerOnView) {
+            // If retrigger is false, don't allow subsequent triggers
+            isCurrentlyVisible = true;
+          }
         }
       });
     };
@@ -341,7 +375,7 @@ export default function DecryptedText({
     const observerOptions = {
       root: null,
       rootMargin: "0px",
-      threshold: 0.1,
+      threshold: 0.15,
     };
 
     const observer = new IntersectionObserver(observerCallback, observerOptions);
@@ -351,11 +385,12 @@ export default function DecryptedText({
     }
 
     return () => {
+      if (timeoutId) clearTimeout(timeoutId);
       if (currentRef) {
         observer.unobserve(currentRef);
       }
     };
-  }, [animateOn, hasAnimated, triggerDecrypt]);
+  }, [animateOn, triggerDecrypt, delay, retriggerDelay, retriggerOnView, sequential]);
 
   useEffect(() => {
     if (animateOn === "click") {

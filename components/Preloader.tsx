@@ -8,12 +8,19 @@ export default function Preloader() {
   const [isHidden, setIsHidden] = useState(false);
 
   useEffect(() => {
+    // Check if user already saw the preloader in this browsing session
+    const hasSeen = typeof window !== "undefined" && sessionStorage.getItem("sk_preloader_seen");
+    if (hasSeen) {
+      setIsHidden(true);
+      return;
+    }
+
     // Prevent scrolling while preloader is active
     document.body.style.overflow = "hidden";
 
     let animationFrameId: number;
     let startTime: number | null = null;
-    const duration = 2000; // 2.0 seconds duration matching video
+    const duration = 1350; // Snappy 1.35s duration for seamless first load
 
     const animate = (timestamp: number) => {
       if (!startTime) startTime = timestamp;
@@ -25,6 +32,7 @@ export default function Preloader() {
       if (currentProgress < 100) {
         animationFrameId = requestAnimationFrame(animate);
       } else {
+        sessionStorage.setItem("sk_preloader_seen", "true");
         // Hold 100% briefly before exit slide-up
         setTimeout(() => {
           setIsExit(true);
@@ -32,8 +40,8 @@ export default function Preloader() {
           setTimeout(() => {
             document.body.style.overflow = "";
             setIsHidden(true);
-          }, 700);
-        }, 250);
+          }, 550);
+        }, 150);
       }
     };
 

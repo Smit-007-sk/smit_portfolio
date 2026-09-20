@@ -110,22 +110,22 @@ export default function ContactSection() {
           </div>
 
           {/* Right Column (Cols 7-12) — 4 Contact Rows with generous gap */}
-          <div className="lg:col-span-6 flex flex-col space-y-5 lg:space-y-6 lg:pl-8">
+          <div className="lg:col-span-6 flex flex-col space-y-4 sm:space-y-5 lg:space-y-6 lg:pl-8">
             {contactLinks.map((item, idx) => {
               const ContentNode = (
-                <div className="p-6 sm:p-7 rounded-2xl bg-white/70 backdrop-blur-md border border-black/10 hover:border-[#F14E08]/60 hover:bg-white flex items-center justify-between gap-4 group cursor-pointer w-full shadow-sm hover:shadow-md transition-all duration-300">
-                  <div className="flex items-center gap-5">
+                <div className="p-4 sm:p-6 md:p-7 rounded-2xl bg-white/70 backdrop-blur-md border border-black/10 hover:border-[#F14E08]/60 hover:bg-white flex items-center justify-between gap-3 sm:gap-4 group cursor-pointer w-full shadow-sm hover:shadow-md transition-all duration-300">
+                  <div className="flex items-center gap-3.5 sm:gap-5 min-w-0 flex-1">
                     {/* Soft Icon Box */}
-                    <div className="w-13 h-13 rounded-xl border border-black/5 bg-neutral-100 flex items-center justify-center shrink-0 shadow-sm group-hover:border-[#F14E08] group-hover:bg-[#F14E08]/10 transition-all">
+                    <div className="w-11 h-11 sm:w-13 sm:h-13 rounded-xl border border-black/5 bg-neutral-100 flex items-center justify-center shrink-0 shadow-sm group-hover:border-[#F14E08] group-hover:bg-[#F14E08]/10 transition-all">
                       {item.icon}
                     </div>
 
                     {/* Info Text */}
-                    <div>
+                    <div className="min-w-0 flex-1">
                       <div className="text-[10px] sm:text-xs font-black uppercase text-neutral-500 tracking-wider mb-0.5">
                         {item.title}
                       </div>
-                      <div className="text-base sm:text-xl font-extrabold text-[#111111] group-hover:text-[#F14E08] transition-colors leading-tight">
+                      <div className="text-xs sm:text-base lg:text-xl font-extrabold text-[#111111] group-hover:text-[#F14E08] transition-colors leading-tight truncate">
                         {item.value}
                       </div>
                     </div>
@@ -133,8 +133,8 @@ export default function ContactSection() {
 
                   {/* Top-Right Arrow (for links) */}
                   {item.href && (
-                    <div className="shrink-0 text-neutral-400 group-hover:text-[#F14E08] group-hover:translate-x-1 group-hover:-translate-y-1 transition-all">
-                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <div className="shrink-0 text-neutral-400 group-hover:text-[#F14E08] group-hover:translate-x-1 group-hover:-translate-y-1 transition-all pl-1 sm:pl-2">
+                      <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                         <line x1="7" y1="17" x2="17" y2="7" />
                         <polyline points="7 7 17 7 17 17" />
                       </svg>

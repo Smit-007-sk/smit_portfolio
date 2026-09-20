@@ -1,26 +1,31 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 export default function Preloader() {
+  const pathname = usePathname();
+  const [shouldRender, setShouldRender] = useState(false);
   const [progress, setProgress] = useState(0);
   const [isExit, setIsExit] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
 
   useEffect(() => {
-    // Check if user already saw the preloader in this browsing session
-    const hasSeen = typeof window !== "undefined" && sessionStorage.getItem("sk_preloader_seen");
-    if (hasSeen) {
+    // Only show on root homepage ("/") on first initial visit, never on refresh or subpages
+    if (typeof window === "undefined") return;
+
+    const hasSeen = sessionStorage.getItem("sk_preloader_seen");
+    if (hasSeen || pathname !== "/") {
       setIsHidden(true);
       return;
     }
 
-    // Prevent scrolling while preloader is active
+    setShouldRender(true);
     document.body.style.overflow = "hidden";
 
     let animationFrameId: number;
     let startTime: number | null = null;
-    const duration = 1350; // Snappy 1.35s duration for seamless first load
+    const duration = 1200;
 
     const animate = (timestamp: number) => {
       if (!startTime) startTime = timestamp;
@@ -33,15 +38,13 @@ export default function Preloader() {
         animationFrameId = requestAnimationFrame(animate);
       } else {
         sessionStorage.setItem("sk_preloader_seen", "true");
-        // Hold 100% briefly before exit slide-up
         setTimeout(() => {
           setIsExit(true);
-          // Re-enable body scroll after exit slide animation completes
           setTimeout(() => {
             document.body.style.overflow = "";
             setIsHidden(true);
-          }, 550);
-        }, 150);
+          }, 500);
+        }, 120);
       }
     };
 
@@ -51,9 +54,9 @@ export default function Preloader() {
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
       document.body.style.overflow = "";
     };
-  }, []);
+  }, [pathname]);
 
-  if (isHidden) return null;
+  if (!shouldRender || isHidden) return null;
 
   return (
     <div

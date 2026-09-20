@@ -8,76 +8,12 @@ export default function Preloader() {
   const [isHidden, setIsHidden] = useState(false);
 
   useEffect(() => {
-    // 1. Immediately reset scroll position to top
-    if (typeof window !== "undefined") {
-      window.scrollTo(0, 0);
-      if ("scrollRestoration" in history) {
-        history.scrollRestoration = "manual";
-      }
-    }
-
-    // 2. Lock html and body overflow, height, and touch action
-    const originalHtmlOverflow = document.documentElement.style.overflow;
-    const originalBodyOverflow = document.body.style.overflow;
-    const originalHtmlHeight = document.documentElement.style.height;
-    const originalBodyHeight = document.body.style.height;
-
-    document.documentElement.style.overflow = "hidden";
+    // Prevent scrolling while preloader is active
     document.body.style.overflow = "hidden";
-    document.documentElement.style.height = "100%";
-    document.body.style.height = "100%";
-    document.body.style.touchAction = "none";
-
-    // Stop Lenis smooth scroll while loading
-    if (typeof window !== "undefined" && window.__lenis) {
-      window.__lenis.stop();
-    }
-    const checkLenisInterval = setInterval(() => {
-      if (typeof window !== "undefined" && window.__lenis) {
-        window.__lenis.stop();
-      }
-    }, 50);
-
-    // 3. Prevent wheel, touchmove, and scroll keyboard shortcuts
-    const preventScroll = (e: Event) => {
-      e.preventDefault();
-      e.stopPropagation();
-      return false;
-    };
-
-    const preventKeys = (e: KeyboardEvent) => {
-      const keys = ["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Space", "Home", "End"];
-      if (keys.includes(e.code) || keys.includes(e.key)) {
-        e.preventDefault();
-        e.stopPropagation();
-        return false;
-      }
-    };
-
-    window.addEventListener("wheel", preventScroll, { passive: false, capture: true });
-    window.addEventListener("touchmove", preventScroll, { passive: false, capture: true });
-    window.addEventListener("keydown", preventKeys, { capture: true });
 
     let animationFrameId: number;
     let startTime: number | null = null;
-    const duration = 2000; // 2.0 seconds duration
-
-    const unlockScroll = () => {
-      clearInterval(checkLenisInterval);
-      window.removeEventListener("wheel", preventScroll, { capture: true });
-      window.removeEventListener("touchmove", preventScroll, { capture: true });
-      window.removeEventListener("keydown", preventKeys, { capture: true });
-
-      document.documentElement.style.overflow = originalHtmlOverflow;
-      document.body.style.overflow = originalBodyOverflow;
-      document.documentElement.style.height = originalHtmlHeight;
-      document.body.style.height = originalBodyHeight;
-      document.body.style.touchAction = "";
-
-      if (typeof window !== "undefined" && window.__lenis) {
-        window.__lenis.start();
-      }
-    };
+    const duration = 2000; // 2.0 seconds duration matching video
 
     const animate = (timestamp: number) => {
       if (!startTime) startTime = timestamp;
@@ -92,9 +28,9 @@ export default function Preloader() {
         // Hold 100% briefly before exit slide-up
         setTimeout(() => {
           setIsExit(true);
-          // Re-enable scroll and reveal page content once exit animation finishes
+          // Re-enable body scroll after exit slide animation completes
           setTimeout(() => {
-            unlockScroll();
+            document.body.style.overflow = "";
             setIsHidden(true);
           }, 700);
         }, 250);
@@ -105,7 +41,7 @@ export default function Preloader() {
 
     return () => {
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
-      unlockScroll();
+      document.body.style.overflow = "";
     };
   }, []);
 
@@ -113,7 +49,7 @@ export default function Preloader() {
 
   return (
     <div
-      className={`fixed inset-0 z-[9999] bg-[#0B0C10] text-white flex flex-col justify-between select-none pointer-events-auto touch-none overscroll-none transition-transform duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] ${
+      className={`fixed inset-0 z-[9999] bg-[#0B0C10] text-white flex flex-col justify-between select-none pointer-events-auto transition-transform duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] ${
         isExit ? "-translate-y-full opacity-90" : "translate-y-0 opacity-100"
       }`}
       aria-hidden="true"

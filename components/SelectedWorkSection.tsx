@@ -191,6 +191,7 @@ export default function SelectedWorkSection() {
 
                     <Link
                       href={`/work/${proj.slug}`}
+                      aria-label={`View ${proj.title} case study`}
                       className="inline-flex items-center gap-1 text-[11px] sm:text-xs font-black uppercase tracking-wider text-[#F14E08] hover:text-[#111111] transition-colors shrink-0 bg-black/5 hover:bg-[#F14E08] hover:text-white px-3 py-1.5 rounded-full"
                     >
                       <span className="hidden sm:inline">VIEW CASE STUDY</span>

@@ -158,10 +158,11 @@ export default function AboutMeSection() {
               <Image
                 src="/sk.png"
                 alt="Smit Khatri"
-                width={400}
-                height={500}
+                width={380}
+                height={475}
+                quality={80}
+                sizes="(max-width: 640px) 320px, 380px"
                 className="object-contain drop-shadow-2xl"
-                priority
               />
             </div>
 
@@ -245,22 +246,22 @@ export default function AboutMeSection() {
           <AccordionGallery
             items={[
               {
-                image: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=1000&auto=format&fit=crop",
+                image: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=600&q=70",
                 label: "UNDERSTAND",
                 description: "Deep dive into your business goals, target users, technical requirements, and core brand values.",
               },
               {
-                image: "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?q=80&w=1000&auto=format&fit=crop",
+                image: "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?auto=format&fit=crop&w=600&q=70",
                 label: "DESIGN",
                 description: "Architect clean, modern, high-converting interfaces with pixel-perfect layouts and responsive design.",
               },
               {
-                image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1000&auto=format&fit=crop",
+                image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=600&q=70",
                 label: "DEVELOP",
                 description: "Engineer fast, scalable, and secure full-stack code using Next.js, React, TypeScript, and modern APIs.",
               },
               {
-                image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1000&auto=format&fit=crop",
+                image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&q=70",
                 label: "DELIVER",
                 description: "Rigorously test performance, optimize speed, and deploy production-ready digital products that drive results.",
               },

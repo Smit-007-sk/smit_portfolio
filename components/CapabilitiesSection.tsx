@@ -176,7 +176,7 @@ export default function CapabilitiesSection() {
               >
                 <div className="flex items-center gap-6 sm:gap-8">
                   {/* Number */}
-                  <span className="text-4xl sm:text-5xl font-mono font-bold text-neutral-400 group-hover:text-[#F14E08] transition-colors">
+                  <span className="text-4xl sm:text-5xl font-mono font-bold text-neutral-500 group-hover:text-[#F14E08] transition-colors">
                     {item.id}
                   </span>
 

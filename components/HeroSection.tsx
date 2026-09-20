@@ -45,7 +45,8 @@ export default function HeroSection() {
             alt="Smit Khatri Portrait"
             fill
             priority
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 75vw, 60vw"
+            quality={80}
+            sizes="(max-width: 640px) 360px, (max-width: 1024px) 580px, 750px"
             className="object-contain object-top md:object-bottom drop-shadow-2xl"
           />
         </div>
@@ -65,7 +66,7 @@ export default function HeroSection() {
         {/* Right Description & Stats Column */}
         <div className="lg:col-span-5 lg:col-start-8 w-full flex flex-col justify-end space-y-6">
           {/* Summary Paragraph */}
-          <p className="text-white/90 text-sm sm:text-base leading-relaxed font-normal drop-shadow">
+          <p className="text-white text-sm sm:text-base leading-relaxed font-medium drop-shadow">
             I build modern websites and web applications, combining thoughtful design, powerful frontend experiences, and reliable backend systems.
           </p>
 
@@ -76,7 +77,7 @@ export default function HeroSection() {
               <div className="text-xl sm:text-2xl md:text-3xl font-black text-white tracking-tight mb-1 uppercase drop-shadow">
                 FULL-STACK
               </div>
-              <div className="text-white/80 text-xs sm:text-sm font-medium tracking-wide">
+              <div className="text-white text-xs sm:text-sm font-semibold tracking-wide">
                 Frontend + Backend
               </div>
             </div>
@@ -86,7 +87,7 @@ export default function HeroSection() {
               <div className="text-xl sm:text-2xl md:text-3xl font-black text-white tracking-tight mb-1 uppercase drop-shadow">
                 MODERN
               </div>
-              <div className="text-white/80 text-xs sm:text-sm font-medium tracking-wide">
+              <div className="text-white text-xs sm:text-sm font-semibold tracking-wide">
                 Web Experiences
               </div>
             </div>

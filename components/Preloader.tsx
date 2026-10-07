@@ -1,31 +1,19 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
 
 export default function Preloader() {
-  const pathname = usePathname();
-  const [shouldRender, setShouldRender] = useState(false);
   const [progress, setProgress] = useState(0);
   const [isExit, setIsExit] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
 
   useEffect(() => {
-    // Only show on root homepage ("/") on first initial visit, never on refresh or subpages
-    if (typeof window === "undefined") return;
-
-    const hasSeen = sessionStorage.getItem("sk_preloader_seen");
-    if (hasSeen || pathname !== "/") {
-      setIsHidden(true);
-      return;
-    }
-
-    setShouldRender(true);
+    // Lock body scroll while loader is active
     document.body.style.overflow = "hidden";
 
     let animationFrameId: number;
     let startTime: number | null = null;
-    const duration = 1200;
+    const duration = 1800; // 1.8s smooth duration
 
     const animate = (timestamp: number) => {
       if (!startTime) startTime = timestamp;
@@ -37,14 +25,15 @@ export default function Preloader() {
       if (currentProgress < 100) {
         animationFrameId = requestAnimationFrame(animate);
       } else {
-        sessionStorage.setItem("sk_preloader_seen", "true");
+        // Hold 100% briefly before sliding up
         setTimeout(() => {
           setIsExit(true);
+          // Re-enable body scroll and unmount after slide-up completes
           setTimeout(() => {
             document.body.style.overflow = "";
             setIsHidden(true);
-          }, 500);
-        }, 120);
+          }, 700);
+        }, 200);
       }
     };
 
@@ -54,14 +43,14 @@ export default function Preloader() {
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
       document.body.style.overflow = "";
     };
-  }, [pathname]);
+  }, []);
 
-  if (!shouldRender || isHidden) return null;
+  if (isHidden) return null;
 
   return (
     <div
       className={`fixed inset-0 z-[9999] bg-[#0B0C10] text-white flex flex-col justify-between select-none pointer-events-auto transition-transform duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] ${
-        isExit ? "-translate-y-full opacity-90" : "translate-y-0 opacity-100"
+        isExit ? "-translate-y-full opacity-95" : "translate-y-0 opacity-100"
       }`}
       aria-hidden="true"
     >

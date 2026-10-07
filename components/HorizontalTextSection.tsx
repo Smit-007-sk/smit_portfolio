@@ -157,10 +157,10 @@ export default function HorizontalTextSection() {
   }, []);
 
   return (
-    <div ref={containerRef} className="relative w-full h-[280vh] lg:h-auto">
+    <div ref={containerRef} className="relative w-full h-[280vh] lg:h-auto bg-[#0B0C10]">
       <section
         ref={sectionRef}
-        className="sticky top-0 lg:relative w-full h-[100svh] min-h-[100svh] bg-[#0B0C10] text-white flex items-center overflow-hidden select-none border-t border-b border-white/10"
+        className="sticky top-0 lg:relative w-full h-[100dvh] min-h-[100dvh] lg:h-[100svh] lg:min-h-[100svh] bg-[#0B0C10] text-white flex items-center overflow-hidden select-none border-t border-b border-white/10"
       >
         {/* Background Subtle Gradient Glow */}
         <div className="absolute inset-0 bg-gradient-to-r from-purple-900/10 via-[#F14E08]/10 to-indigo-900/10 pointer-events-none" />

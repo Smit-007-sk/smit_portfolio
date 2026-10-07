@@ -15,86 +15,141 @@ export default function HorizontalTextSection() {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    ScrollTrigger.config({
-      ignoreMobileResize: true,
-      autoRefreshEvents: "visibilitychange,DOMContentLoaded,load",
-    });
-
     const section = sectionRef.current;
     const text = textRef.current;
     if (!section || !text) return;
 
     const chars = charsRef.current.filter(Boolean) as HTMLSpanElement[];
+    const mm = gsap.matchMedia();
 
-    // 1. Initial start position (starts off-screen right)
-    const startX = window.innerWidth;
-    
-    // 2. Final target position: completes when "UNFORGETTABLE?" reaches the left edge
-    const endX = -(text.scrollWidth + 20);
+    // ==========================================
+    // DESKTOP: (min-width: 1024px) - 100% UNCHANGED
+    // ==========================================
+    mm.add("(min-width: 1024px)", () => {
+      ScrollTrigger.config({
+        ignoreMobileResize: true,
+        autoRefreshEvents: "visibilitychange,DOMContentLoaded,load",
+      });
 
-    // Set initial position
-    gsap.set(text, { x: startX });
+      const startX = window.innerWidth;
+      const endX = -(text.scrollWidth + 20);
+      const totalTravel = Math.abs(endX - startX);
 
-    // 3. Pin Section with scroll distance 1:1 synchronized so unpin happens exactly when text reaches left side
-    const totalTravel = Math.abs(endX - startX);
-    const scrollTween = gsap.to(text, {
-      x: endX,
-      ease: "none",
-      scrollTrigger: {
-        trigger: section,
-        pin: true,
-        pinSpacing: true,
-        start: "top top",
-        end: () => `+=${Math.round(totalTravel)}px`,
-        scrub: 0.8,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-      },
-    });
+      gsap.set(text, { x: startX });
 
-    // 4. Character alternating UP and DOWN entrance
-    let letterCount = 0;
-    chars.forEach((char) => {
-      const textContent = char.textContent?.trim();
-      const isSpace = !textContent;
-
-      // Determine alternating direction for each letter: Even index from UP, Odd index from DOWN
-      const isFromUp = letterCount % 2 === 0;
-      if (!isSpace) {
-        letterCount++;
-      }
-
-      const initialY = isFromUp ? -120 : 120;
-
-      gsap.fromTo(
-        char,
-        {
-          yPercent: initialY,
-          opacity: 0,
+      const scrollTween = gsap.to(text, {
+        x: endX,
+        ease: "none",
+        scrollTrigger: {
+          trigger: section,
+          pin: true,
+          pinSpacing: true,
+          start: "top top",
+          end: () => `+=${Math.round(totalTravel)}px`,
+          scrub: 0.8,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
         },
-        {
-          yPercent: 0,
-          opacity: 1,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: char,
-            containerAnimation: scrollTween,
-            start: "left 95%",
-            end: "left 45%",
-            scrub: 0.6,
-          },
+      });
+
+      let letterCount = 0;
+      chars.forEach((char) => {
+        const textContent = char.textContent?.trim();
+        const isSpace = !textContent;
+        const isFromUp = letterCount % 2 === 0;
+        if (!isSpace) {
+          letterCount++;
         }
-      );
+
+        const initialY = isFromUp ? -120 : 120;
+
+        gsap.fromTo(
+          char,
+          {
+            yPercent: initialY,
+            opacity: 0,
+          },
+          {
+            yPercent: 0,
+            opacity: 1,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: char,
+              containerAnimation: scrollTween,
+              start: "left 95%",
+              end: "left 45%",
+              scrub: 0.6,
+            },
+          }
+        );
+      });
     });
 
-    // Refresh layout measurements
+    // ==========================================
+    // MOBILE / TABLET: (max-width: 1023px) - FIXED
+    // ==========================================
+    mm.add("(max-width: 1023px)", () => {
+      const startX = window.innerWidth;
+      const endX = -(text.scrollWidth + 20);
+      const totalTravel = Math.abs(endX - startX);
+
+      gsap.set(text, { x: startX });
+
+      // Unified timeline with anticipatePin: 0 and direct scrub for 1:1 synchronous touch scroll
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          pin: true,
+          pinSpacing: true,
+          start: "top top",
+          end: () => `+=${Math.round(totalTravel)}px`,
+          scrub: 0.1,
+          anticipatePin: 0,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      tl.to(text, {
+        x: endX,
+        ease: "none",
+        duration: 1,
+      }, 0);
+
+      let letterCount = 0;
+      const totalChars = chars.length;
+      chars.forEach((char, index) => {
+        const textContent = char.textContent?.trim();
+        const isSpace = !textContent;
+        const isFromUp = letterCount % 2 === 0;
+        if (!isSpace) {
+          letterCount++;
+        }
+
+        const initialY = isFromUp ? -100 : 100;
+        gsap.set(char, { yPercent: initialY, opacity: 0 });
+
+        // Stagger character appearance in direct proportion to horizontal scroll position
+        const startTime = Math.min(0.85, (index / totalChars) * 0.85);
+        tl.to(
+          char,
+          {
+            yPercent: 0,
+            opacity: 1,
+            ease: "power1.out",
+            duration: 0.15,
+          },
+          startTime
+        );
+      });
+    });
+
     const timeout = setTimeout(() => {
       ScrollTrigger.refresh();
     }, 200);
 
     return () => {
       clearTimeout(timeout);
-      ScrollTrigger.getAll().forEach((t) => t.kill());
+      mm.revert();
     };
   }, []);
 
